@@ -1,0 +1,1238 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Robô Prestação de Contas</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <style type="text/tailwindcss">
+      @theme {
+        --color-primary: #991b1b;
+        --color-secondary: #262626;
+        --color-success: #10b981;
+        --color-danger: #ef4444;
+        --color-warning: #f59e0b;
+        --color-light: #f8fafc;
+      }
+      
+      .glass-effect {
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+      }
+      
+      .terminal-glow {
+        box-shadow: 0 0 20px rgba(34, 197, 94, 0.3), inset 0 0 20px rgba(0, 0, 0, 0.5);
+      }
+      
+      .gradient-bg {
+        background: linear-gradient(135deg, #991b1b 0%, #262626 50%, #991b1b 100%);
+      }
+      
+      .card-modern {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(20px);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+      }
+      
+      .terminal-cursor::after {
+        content: '█';
+        animation: blink 1s infinite;
+        color: #22c55e;
+      }
+      
+      @keyframes blink {
+        0%, 50% { opacity: 1; }
+        51%, 100% { opacity: 0; }
+      }
+      
+      .hover-lift {
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+      
+      .hover-lift:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+      }
+      
+      .neon-border {
+        border: 2px solid transparent;
+        background: linear-gradient(45deg, #991b1b, #262626, #991b1b) border-box;
+        background-clip: padding-box, border-box;
+      }
+      
+      /* Toggle Switch Styles */
+      .toggle-switch {
+        position: relative;
+        display: inline-block;
+        width: 60px;
+        height: 34px;
+      }
+      
+      .toggle-switch input {
+        opacity: 0;
+        width: 0;
+        height: 0;
+      }
+      
+      .slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: #ccc;
+        transition: .4s;
+        border-radius: 34px;
+      }
+      
+      .slider:before {
+        position: absolute;
+        content: "";
+        height: 26px;
+        width: 26px;
+        left: 4px;
+        bottom: 4px;
+        background-color: white;
+        transition: .4s;
+        border-radius: 50%;
+      }
+      
+      input:checked + .slider {
+        background-color: #991b1b;
+      }
+      
+      input:focus + .slider {
+        box-shadow: 0 0 1px #991b1b;
+      }
+      
+      input:checked + .slider:before {
+        transform: translateX(26px);
+      }
+      
+      .toggle-label {
+        margin-left: 10px;
+        font-weight: 600;
+        color: #374151;
+      }
+      
+      .institutional-gradient {
+        background: linear-gradient(135deg, #991b1b 0%, #262626 100%);
+      }
+      
+      .institutional-gradient-reverse {
+        background: linear-gradient(135deg, #262626 0%, #991b1b 100%);
+      }
+      
+      .red-accent {
+        background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%);
+        border-color: #f87171;
+      }
+      
+      .neutral-accent {
+        background: linear-gradient(135deg, #fafafa 0%, #f5f5f5 100%);
+        border-color: #737373;
+      }
+    </style>
+
+    <!-- Fontawesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    
+    <!-- Socket.io -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
+
+    <script>
+        var socket = io();
+
+        function atualizarParcerias() {
+            var orgaoSelecionado = document.getElementById("orgao_publico").value;
+            var parceriaSelect = document.getElementById("parceria");
+
+            // Limpa as opções anteriores
+            parceriaSelect.innerHTML = '<option value="">Carregando...</option>';
+
+            // Faz a requisição ao backend para obter as parcerias
+            fetch("/get_parcerias", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ orgao_publico: orgaoSelecionado })
+            })
+            .then(response => response.json())
+            .then(data => {
+                parceriaSelect.innerHTML = ""; // Limpa opções
+
+                if (data.parcerias.length > 0) {
+                    data.parcerias.forEach(parceria => {
+                        let option = document.createElement("option");
+                        option.value = parceria.id;
+                        option.textContent = parceria.nome;
+                        parceriaSelect.appendChild(option);
+                    });
+                } else {
+                    parceriaSelect.innerHTML = '<option value="">Nenhuma parceria disponível</option>';
+                }
+            })
+            .catch(error => {
+                console.error("Erro ao buscar parcerias:", error);
+                parceriaSelect.innerHTML = '<option value="">Erro ao carregar parcerias</option>';
+            });
+        }
+
+        function showMessage(message, type) {
+            // Adiciona a mensagem na área de log estilo terminal
+            var logDiv = document.getElementById("logArea");
+            var timestamp = new Date().toLocaleTimeString();
+            var icon = type === 'danger' ? '❌' : (type === 'success' ? '✅' : 'ℹ️');
+            var colorClass = type === 'danger' ? 'text-red-400' : (type === 'success' ? 'text-green-400' : 'text-blue-400');
+            
+            logDiv.innerHTML += `<div class="flex items-start space-x-2 mb-1">
+                <span class="text-gray-500 text-xs">[${timestamp}]</span>
+                <span class="${colorClass}">${icon}</span>
+                <span class="text-green-400 flex-1">${message}</span>
+            </div>`;
+            logDiv.scrollTop = logDiv.scrollHeight;
+
+            // Mostra o toast do SweetAlert2
+            const Toast = Swal.mixin({
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 3000,
+                timerProgressBar: true,
+                didOpen: (toast) => {
+                    toast.addEventListener('mouseenter', Swal.stopTimer)
+                    toast.addEventListener('mouseleave', Swal.resumeTimer)
+                }
+            });
+
+            Toast.fire({
+                icon: type === 'danger' ? 'error' : (type === 'success' ? 'success' : 'info'),
+                title: message
+            });
+        }
+
+        function excluirPDFs() {
+            Swal.fire({
+                title: 'Tem certeza?',
+                text: "Todos os arquivos serão excluídos permanentemente!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#991b1b',
+                cancelButtonColor: '#6b7280',
+                confirmButtonText: 'Sim, excluir tudo!',
+                cancelButtonText: 'Cancelar'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    fetch('/excluir_pdfs', {
+                        method: 'POST'
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.status === 'success') {
+                            Swal.fire(
+                                'Excluído!',
+                                'Todos os arquivos foram excluídos com sucesso!',
+                                'success'
+                            );
+                            atualizarStatusArquivos();
+                        } else {
+                            Swal.fire(
+                                'Erro!',
+                                data.message,
+                                'error'
+                            );
+                        }
+                    })
+                    .catch(error => {
+                        Swal.fire(
+                            'Erro!',
+                            'Erro ao excluir os arquivos: ' + error,
+                            'error'
+                        );
+                    });
+                }
+            });
+        }
+
+        function excluirPlanilha() {
+            Swal.fire({
+                title: 'Tem certeza?',
+                text: "A planilha será excluída permanentemente!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#991b1b',
+                cancelButtonColor: '#6b7280',
+                confirmButtonText: 'Sim, excluir!',
+                cancelButtonText: 'Cancelar'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    fetch('/excluir_planilha', {
+                        method: 'POST'
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.status === 'success') {
+                            Swal.fire(
+                                'Excluído!',
+                                'Planilha excluída com sucesso!',
+                                'success'
+                            );
+                            atualizarStatusArquivos();
+                        } else {
+                            Swal.fire(
+                                'Erro!',
+                                data.message,
+                                'error'
+                            );
+                        }
+                    })
+                    .catch(error => {
+                        Swal.fire(
+                            'Erro!',
+                            'Erro ao excluir a planilha: ' + error,
+                            'error'
+                        );
+                    });
+                }
+            });
+        }
+
+        function iniciarRobo() {
+            var dataEmissao = document.getElementById("data_emissao").value;
+            var dataPagamento = document.getElementById("data_pagamento").value;
+            var orgaoPublico = document.getElementById("orgao_publico").value;
+            var parceria = document.getElementById("parceria").value;
+            var headlessMode = document.getElementById("headlessMode").checked;
+            var modoSimulacao = document.getElementById("modoSimulacao").checked;
+            var btn = document.getElementById("btnIniciar");
+
+            // Validação dos campos
+            if (!dataEmissao || !dataPagamento || !orgaoPublico || !parceria) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Atenção!',
+                    text: 'Todos os campos são obrigatórios!'
+                });
+                return;
+            }
+
+            btn.innerHTML = '<svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white inline" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg> Executando...';
+            btn.disabled = true;
+
+            // Limpa terminal e adiciona mensagem de início
+            document.getElementById("logArea").innerHTML = `
+                <div class="flex items-center space-x-2 mb-2">
+                    <span class="text-green-400">➜</span>
+                    <span class="text-blue-400">robo-prestacao-contas</span>
+                    <span class="text-gray-500">~</span>
+                    <span class="text-green-400">Iniciando execução do robô...</span>
+                    <span class="terminal-cursor"></span>
+                </div>
+            `;
+
+            // Rolar a tela até a área de logs
+            document.querySelector('.logs-card').scrollIntoView({ behavior: 'smooth' });
+
+            fetch("/start_robot", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ 
+                    data_emissao: dataEmissao, 
+                    data_pagamento: dataPagamento,
+                    orgao_publico: orgaoPublico,
+                    parceria: parceria,
+                    headless_mode: headlessMode,
+                    modo_simulacao: modoSimulacao
+                })
+            }).then(response => response.json()).then(data => {
+                // Limpar formulário após execução
+                document.getElementById("data_emissao").value = "";
+                document.getElementById("data_pagamento").value = "";
+                document.getElementById("orgao_publico").value = "";
+                document.getElementById("parceria").innerHTML = '<option value="">Selecione um órgão primeiro</option>';
+                
+                if (data.status === "success") {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Sucesso!',
+                        text: 'Robô finalizado com sucesso!'
+                    });
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Erro!',
+                        text: data.message
+                    });
+                }
+                btn.innerHTML = '<i class="fas fa-rocket mr-2"></i>Iniciar Robô';
+                btn.disabled = false;
+            }).catch(error => {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Erro!',
+                    text: 'Erro ao iniciar o robô: ' + error
+                });
+                btn.innerHTML = '<i class="fas fa-rocket mr-2"></i>Iniciar Robô';
+                btn.disabled = false;
+            });
+        }
+
+        socket.on("mensagem_personalizada", function (data) {
+            showMessage(data.message, data.level === "error" ? "danger" : (data.level === "info" ? "success" : "info"));
+        });
+
+        // Função para atualizar o status dos arquivos
+        function atualizarStatusArquivos() {
+            fetch('/status_arquivos')
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    // Atualiza status da planilha
+                    if (data.planilha) {
+                        document.getElementById('planilhaStatus').innerHTML = `<i class="fas fa-check-circle text-green-500 mr-1"></i>Arquivo atual: ${data.planilha}`;
+                    } else {
+                        document.getElementById('planilhaStatus').innerHTML = `<i class="fas fa-exclamation-circle text-yellow-500 mr-1"></i>Nenhuma planilha carregada`;
+                    }
+
+                    // Atualiza status dos PDFs
+                    const pdfStatus = document.getElementById('pdfStatus');
+                    if (data.pdfs > 0) {
+                        pdfStatus.innerHTML = `<i class="fas fa-check-circle text-green-500 mr-1"></i>${data.pdfs} arquivo(s) PDF na pasta`;
+                    } else {
+                        pdfStatus.innerHTML = `<i class="fas fa-exclamation-circle text-yellow-500 mr-1"></i>Nenhum arquivo PDF na pasta`;
+                    }
+
+                    // Atualiza lista de arquivos
+                    const listaArquivos = document.getElementById('listaArquivos');
+                    listaArquivos.innerHTML = ''; // Limpa a lista atual
+
+                    // Adiciona a planilha se existir
+                    if (data.planilha) {
+                        const planilhaItem = document.createElement('div');
+                        planilhaItem.className = 'flex items-center justify-between p-3 hover:bg-gray-50 border-b border-gray-100 transition-all duration-200 hover:scale-105';
+                        planilhaItem.innerHTML = `
+                            <span class="flex items-center">
+                                <i class="fas fa-file-excel text-green-500 mr-3 text-lg"></i> 
+                                <span class="font-medium">${data.planilha}</span>
+                            </span>
+                            <span class="px-2 py-1 bg-green-100 text-green-800 rounded-full text-xs font-medium">Excel</span>
+                        `;
+                        listaArquivos.appendChild(planilhaItem);
+                    }
+
+                    // Adiciona os PDFs
+                    if (data.pdf_list && data.pdf_list.length > 0) {
+                        data.pdf_list.forEach(pdf => {
+                            const pdfItem = document.createElement('div');
+                            pdfItem.className = 'flex items-center justify-between p-3 hover:bg-gray-50 border-b border-gray-100 transition-all duration-200 hover:scale-105';
+                            pdfItem.innerHTML = `
+                                <span class="flex items-center">
+                                    <i class="fas fa-file-pdf text-red-800 mr-3 text-lg"></i> 
+                                    <span class="font-medium">${pdf}</span>
+                                </span>
+                                <span class="px-2 py-1 bg-red-100 text-red-800 rounded-full text-xs font-medium">PDF</span>
+                            `;
+                            listaArquivos.appendChild(pdfItem);
+                        });
+                    }
+
+                    // Se não houver arquivos
+                    if (!data.planilha && (!data.pdf_list || data.pdf_list.length === 0)) {
+                        const emptyItem = document.createElement('div');
+                        emptyItem.className = 'flex items-center justify-center p-8 text-gray-400';
+                        emptyItem.innerHTML = `
+                            <div class="text-center">
+                                <i class="fas fa-folder-open text-4xl mb-2"></i>
+                                <p class="text-sm">Nenhum arquivo encontrado</p>
+                            </div>
+                        `;
+                        listaArquivos.appendChild(emptyItem);
+                    }
+                } else {
+                    showMessage("❌ Erro ao atualizar status: " + data.message, "danger");
+                }
+            })
+            .catch(error => {
+                showMessage("❌ Erro ao atualizar status: " + error, "danger");
+            });
+        }
+
+        // Atualiza status quando a página carrega
+        window.onload = function() {
+            atualizarStatusArquivos();
+            // Verifica automaticamente a compatibilidade do ChromeDriver ao carregar a página
+            setTimeout(verificarCompatibilidadeDriver, 1000);
+        };
+
+        // Atualiza status após upload de planilha
+        function uploadPlanilha() {
+            const fileInput = document.getElementById('planilhaInput');
+            const file = fileInput.files[0];
+            if (!file) {
+                showMessage("⚠️ Selecione uma planilha para fazer upload", "warning");
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append('planilha', file);
+
+            fetch('/upload_planilha', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    showMessage("✅ Planilha enviada com sucesso!", "success");
+                    fileInput.value = '';
+                    atualizarStatusArquivos();  // Atualiza status
+                } else {
+                    showMessage(data.message, "danger");
+                }
+            })
+            .catch(error => {
+                showMessage("❌ Erro ao fazer upload da planilha: " + error, "danger");
+            });
+        }
+
+        // Atualiza status após upload de PDFs
+        function uploadPDFs() {
+            const fileInput = document.getElementById('pdfInput');
+            const files = fileInput.files;
+            if (files.length === 0) {
+                showMessage("⚠️ Selecione pelo menos um arquivo PDF para fazer upload", "warning");
+                return;
+            }
+
+            const formData = new FormData();
+            for (let i = 0; i < files.length; i++) {
+                formData.append('pdfs', files[i]);
+            }
+
+            fetch('/upload_pdfs', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    showMessage(`✅ ${files.length} arquivo(s) PDF enviado(s) com sucesso!`, "success");
+                    fileInput.value = '';
+                    atualizarStatusArquivos();  // Atualiza status
+                } else {
+                    showMessage(data.message, "danger");
+                }
+            })
+            .catch(error => {
+                showMessage("❌ Erro ao fazer upload dos PDFs: " + error, "danger");
+            });
+        }
+
+        // Função para atualizar labels dos toggles
+        function updateToggleLabel(toggleId, labelId) {
+            const toggle = document.getElementById(toggleId);
+            const label = document.getElementById(labelId);
+            label.textContent = toggle.checked ? 'Ativado' : 'Desativado';
+        }
+
+        // Event listeners para os toggles
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('headlessMode').addEventListener('change', function() {
+                updateToggleLabel('headlessMode', 'headlessLabel');
+            });
+            
+            document.getElementById('modoSimulacao').addEventListener('change', function() {
+                updateToggleLabel('modoSimulacao', 'simulacaoLabel');
+            });
+        });
+
+        function verificarCompatibilidadeDriver() {
+            const btnVerificar = document.getElementById('btnVerificarDriver');
+            const driverStatusArea = document.getElementById('driverStatusArea');
+            const chromeVersion = document.getElementById('chromeVersion');
+            const chromedriverVersion = document.getElementById('chromedriverVersion');
+            const compatibilityStatus = document.getElementById('compatibilityStatus');
+            const instructionsArea = document.getElementById('instructionsArea');
+            const requiredVersionSpan = document.getElementById('requiredVersion');
+            const statusIcon = document.getElementById('statusIcon');
+            const statusTitle = document.getElementById('statusTitle');
+            const statusMessage = document.getElementById('statusMessage');
+
+            btnVerificar.innerHTML = '<svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white inline" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg> Verificando...';
+            btnVerificar.disabled = true;
+            driverStatusArea.style.display = 'none';
+            compatibilityStatus.classList.add('hidden');
+            instructionsArea.classList.add('hidden');
+            requiredVersionSpan.textContent = '';
+
+            fetch('/verificar_chromedriver')
+                .then(response => response.json())
+                .then(data => {
+                    chromeVersion.textContent = data.chrome_version || 'Não disponível';
+                    chromedriverVersion.textContent = data.chromedriver_version || 'Não disponível';
+
+                    if (data.compatible) {
+                        // Mostrar versão compacta quando compatível
+                        switchToCompactView(data.chrome_version, data.chromedriver_version);
+                        showMessage("✅ ChromeDriver compatível com o navegador Chrome", "success");
+                    } else {
+                        // Manter versão expandida quando incompatível ou erro
+                        compatibilityStatus.classList.remove('hidden');
+                        compatibilityStatus.className = 'p-4 rounded-lg border-l-4 border-red-400 bg-red-50';
+                        statusIcon.innerHTML = '❌';
+                        statusTitle.textContent = 'Incompatível!';
+                        statusTitle.className = 'font-bold text-red-800';
+                        statusMessage.textContent = data.message || 'As versões do Chrome e ChromeDriver não são compatíveis.';
+                        statusMessage.className = 'text-sm text-red-700';
+                        instructionsArea.classList.remove('hidden');
+                        
+                        // Extrai versão principal do Chrome para mostrar na instrução
+                        const chromeMajor = data.chrome_version ? data.chrome_version.split('.')[0] : 'atual';
+                        requiredVersionSpan.textContent = chromeMajor;
+                        
+                        showMessage("⚠️ ChromeDriver incompatível - Verifique as instruções", "warning");
+                        driverStatusArea.style.display = 'block';
+                    }
+                })
+                .catch(error => {
+                    console.error('Erro ao verificar compatibilidade:', error);
+                    showMessage("❌ Erro ao verificar compatibilidade do ChromeDriver", "danger");
+                    
+                    compatibilityStatus.classList.remove('hidden');
+                    compatibilityStatus.className = 'p-4 rounded-lg border-l-4 border-yellow-400 bg-yellow-50';
+                    statusIcon.innerHTML = '⚠️';
+                    statusTitle.textContent = 'Erro!';
+                    statusTitle.className = 'font-bold text-yellow-800';
+                    statusMessage.textContent = 'Ocorreu um erro ao verificar a compatibilidade do ChromeDriver.';
+                    statusMessage.className = 'text-sm text-yellow-700';
+                    instructionsArea.classList.add('hidden');
+                    driverStatusArea.style.display = 'block';
+                })
+                .finally(() => {
+                    btnVerificar.innerHTML = '<i class="fas fa-search mr-2"></i> Verificar';
+                    btnVerificar.disabled = false;
+                });
+        }
+
+        function switchToCompactView(chromeVersion, chromedriverVersion) {
+            const compactDriverStatus = document.getElementById('compactDriverStatus');
+            const expandedDriverStatus = document.getElementById('expandedDriverStatus');
+            const compactVersions = document.getElementById('compactVersions');
+            
+            // Atualiza as versões na visão compacta
+            compactVersions.textContent = `Chrome: ${chromeVersion} | ChromeDriver: ${chromedriverVersion}`;
+            
+            // Esconde a versão expandida e mostra a compacta
+            expandedDriverStatus.style.display = 'none';
+            compactDriverStatus.classList.remove('hidden');
+        }
+
+        function expandDriverStatus() {
+            const compactDriverStatus = document.getElementById('compactDriverStatus');
+            const expandedDriverStatus = document.getElementById('expandedDriverStatus');
+            const driverStatusArea = document.getElementById('driverStatusArea');
+            
+            // Esconde a versão compacta e mostra a expandida
+            compactDriverStatus.classList.add('hidden');
+            expandedDriverStatus.style.display = 'block';
+            driverStatusArea.style.display = 'block';
+        }
+
+        // Funções para controlar o modal de ajuda
+        function abrirModalAjuda() {
+            document.getElementById('modalAjuda').classList.remove('hidden');
+            document.body.style.overflow = 'hidden'; // Previne scroll da página
+        }
+
+        function fecharModalAjuda() {
+            document.getElementById('modalAjuda').classList.add('hidden');
+            document.body.style.overflow = 'auto'; // Restaura scroll da página
+        }
+
+        // Fechar modal ao clicar fora dele
+        document.addEventListener('DOMContentLoaded', function() {
+            const modal = document.getElementById('modalAjuda');
+            modal.addEventListener('click', function(e) {
+                if (e.target === modal) {
+                    fecharModalAjuda();
+                }
+            });
+
+            // Fechar modal com tecla ESC
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape') {
+                    fecharModalAjuda();
+                }
+            });
+        });
+    </script>
+
+</head>
+<body class="min-h-screen gradient-bg">
+
+    <div class="container mx-auto max-w-7xl px-4 py-8">
+        <!-- Header moderno com glassmorphism -->
+        <div class="text-center mb-8">
+            <div class="bg-white rounded-2xl p-8 hover-lift relative">             
+                
+                <!-- Logo da empresa -->
+                <div class="mb-6">
+                    <img src="/logo_horizontal_color.png" alt="Logo da Empresa" class="mx-auto h-16 md:h-20 object-contain filter drop-shadow-lg">
+                </div>
+                <h1 class="text-5xl font-bold mb-2 text-gray-500">
+                    Robô Prestação de Contas
+                </h1>
+                <p class="text-gray-500 text-lg">Sistema Automatizado de Gestão de Documentos</p>
+            </div>
+        </div>
+
+        <div class="card-modern rounded-3xl shadow-2xl overflow-hidden hover-lift mb-8">
+            <div class="institutional-gradient text-white text-center px-8 py-6">
+                <h3 class="text-3xl font-bold mb-0 flex items-center justify-center">
+                    <i class="fas fa-cogs mr-3"></i>
+                    Painel de Controle
+                </h3>
+                 <!-- Botão de Ajuda -->
+                <button onclick="abrirModalAjuda()" class="absolute top-4 right-4 w-10 h-10 group">
+                    <i style="font-size: 30px; cursor: pointer;" class="fas fa-info-circle text-lg"></i>
+                    <span class="absolute -bottom-10 right-0 bg-gray-800 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap">
+                        Instruções de Uso
+                    </span>
+                </button>
+            </div>
+            <div class="p-8">
+                <!-- Nova seção de upload de arquivos -->
+                <div class="mb-10">
+                    <h5 class="text-2xl font-bold mb-6 flex items-center text-neutral-800">
+                        <div class="w-10 h-10 institutional-gradient rounded-full flex items-center justify-center mr-3">
+                            <i class="fas fa-folder text-white"></i>
+                        </div>
+                        Gerenciamento de Arquivos
+                    </h5>
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                        <div class="bg-gradient-to-br from-green-50 to-green-100 border-2 border-green-200 rounded-2xl shadow-lg hover-lift">
+                            <div class="p-6">
+                                <h6 class="text-xl font-bold mb-4 flex items-center text-green-800">
+                                    <i class="fas fa-file-excel text-green-600 mr-2 text-2xl"></i>
+                                    Planilha Excel
+                                </h6>
+                                <div class="space-y-4">
+                                    <input type="file" id="planilhaInput" class="w-full px-4 py-3 border-2 border-green-300 rounded-xl focus:outline-none focus:ring-4 focus:ring-green-200 focus:border-green-500 transition-all duration-200" accept=".xlsx">
+                                    <div class="flex gap-3">
+                                        <button type="button" class="flex-1 bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white font-bold py-3 px-4 rounded-xl transition-all duration-200 flex items-center justify-center shadow-lg hover:shadow-xl transform hover:scale-105" onclick="uploadPlanilha()">
+                                            <i class="fas fa-cloud-upload-alt mr-2"></i> Upload
+                                        </button>
+                                        <button type="button" class="flex-1 bg-gradient-to-r from-red-800 to-red-900 hover:from-red-900 hover:to-red-800 text-white font-bold py-3 px-4 rounded-xl transition-all duration-200 flex items-center justify-center shadow-lg hover:shadow-xl transform hover:scale-105" onclick="excluirPlanilha()">
+                                            <i class="fas fa-trash-alt mr-2"></i> Excluir
+                                        </button>
+                                    </div>
+                                    <div class="bg-white/70 backdrop-blur-sm rounded-lg p-3">
+                                        <small class="text-gray-700 text-sm font-medium flex items-center" id="planilhaStatus"></small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="red-accent border-2 rounded-2xl shadow-lg hover-lift">
+                            <div class="p-6">
+                                <h6 class="text-xl font-bold mb-4 flex items-center text-red-800">
+                                    <i class="fas fa-file-pdf text-red-800 mr-2 text-2xl"></i>
+                                    Arquivos PDF
+                                </h6>
+                                <div class="space-y-4">
+                                    <input type="file" id="pdfInput" class="w-full px-4 py-3 border-2 border-red-300 rounded-xl focus:outline-none focus:ring-4 focus:ring-red-200 focus:border-red-800 transition-all duration-200" accept=".pdf" multiple>
+                                    <div class="flex gap-3">
+                                        <button type="button" class="flex-1 bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white font-bold py-3 px-4 rounded-xl transition-all duration-200 flex items-center justify-center shadow-lg hover:shadow-xl transform hover:scale-105" onclick="uploadPDFs()">
+                                            <i class="fas fa-cloud-upload-alt mr-2"></i> Upload
+                                        </button>
+                                        <button type="button" class="flex-1 bg-gradient-to-r from-red-800 to-red-900 hover:from-red-900 hover:to-red-800 text-white font-bold py-3 px-4 rounded-xl transition-all duration-200 flex items-center justify-center shadow-lg hover:shadow-xl transform hover:scale-105" onclick="excluirPDFs()">
+                                            <i class="fas fa-broom mr-2"></i> Limpar
+                                        </button>
+                                    </div>
+                                    <div class="bg-white/70 backdrop-blur-sm rounded-lg p-3">
+                                        <small class="text-gray-700 text-sm font-medium flex items-center" id="pdfStatus"></small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="neutral-accent border-2 rounded-2xl shadow-lg hover-lift">
+                            <div class="p-6">
+                                <h6 class="text-xl font-bold mb-4 flex items-center text-neutral-800">
+                                    <i class="fas fa-list text-neutral-800 mr-2 text-2xl"></i>
+                                    Lista de Arquivos
+                                </h6>
+                                <div class="bg-white/70 backdrop-blur-sm border-2 border-neutral-300 rounded-xl max-h-48 overflow-y-auto" id="listaArquivos">
+                                    <!-- Lista de arquivos será preenchida via JavaScript -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Verificação de Compatibilidade do ChromeDriver -->
+                <div class="mb-6" id="chromedriverSection">
+                    <!-- Versão Compacta (quando compatível) -->
+                    <div id="compactDriverStatus" class="hidden bg-green-50 border border-green-200 rounded-xl p-4 shadow-sm hover-lift">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center">
+                                <div class="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center mr-3">
+                                    <i class="fas fa-check text-white text-sm"></i>
+                                </div>
+                                <div>
+                                    <span class="font-medium text-green-800">ChromeDriver Compatível</span>
+                                    <span class="text-sm text-green-600 ml-2" id="compactVersions">Chrome: - | ChromeDriver: -</span>
+                                </div>
+                            </div>
+                            <button type="button" class="text-green-600 hover:text-green-800 transition-colors duration-200" onclick="expandDriverStatus()">
+                                <i class="fas fa-chevron-down"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Versão Expandida (inicial, erro ou incompatível) -->
+                    <div id="expandedDriverStatus">
+                        <h5 class="text-2xl font-bold mb-6 flex items-center text-neutral-800">
+                            <div class="w-10 h-10 institutional-gradient rounded-full flex items-center justify-center mr-3">
+                                <i class="fas fa-cog text-white"></i>
+                            </div>
+                            Verificação do ChromeDriver
+                        </h5>
+                        <div class="red-accent border-2 rounded-2xl shadow-lg hover-lift p-6">
+                            <div class="flex items-center justify-between mb-4">
+                                <div class="flex items-center">
+                                    <div class="w-8 h-8 bg-red-800 rounded-full flex items-center justify-center mr-3">
+                                        <i class="fas fa-chrome text-white"></i>
+                                    </div>
+                                    <div>
+                                        <h6 class="text-xl font-bold text-red-800">Status de Compatibilidade</h6>
+                                        <p class="text-sm text-red-600">Verifica se o ChromeDriver é compatível com o navegador Chrome</p>
+                                    </div>
+                                </div>
+                                <button type="button" id="btnVerificarDriver" class="bg-gradient-to-r from-red-800 to-red-900 hover:from-red-900 hover:to-red-800 text-white font-bold py-2 px-4 rounded-xl transition-all duration-200 flex items-center shadow-lg hover:shadow-xl transform hover:scale-105" onclick="verificarCompatibilidadeDriver()">
+                                    <i class="fas fa-search mr-2"></i> Verificar
+                                </button>
+                            </div>
+                            
+                            <div id="driverStatusArea" class="bg-white/70 backdrop-blur-sm rounded-lg p-4 space-y-3" style="display: none;">
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                                        <span class="font-medium text-gray-700">Chrome Versão:</span>
+                                        <span id="chromeVersion" class="font-bold text-gray-900">-</span>
+                                    </div>
+                                    <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                                        <span class="font-medium text-gray-700">ChromeDriver Versão:</span>
+                                        <span id="chromedriverVersion" class="font-bold text-gray-900">-</span>
+                                    </div>
+                                </div>
+                                
+                                <div id="compatibilityStatus" class="p-4 rounded-lg border-l-4 hidden">
+                                    <div class="flex items-center">
+                                        <span id="statusIcon" class="mr-3 text-2xl"></span>
+                                        <div>
+                                            <h4 id="statusTitle" class="font-bold"></h4>
+                                            <p id="statusMessage" class="text-sm"></p>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div id="instructionsArea" class="hidden bg-yellow-50 border-l-4 border-yellow-400 p-4 rounded-lg">
+                                    <div class="flex items-start">
+                                        <div class="flex-shrink-0">
+                                            <i class="fas fa-exclamation-triangle text-yellow-400 text-xl"></i>
+                                        </div>
+                                        <div class="ml-3">
+                                            <h4 class="text-lg font-bold text-yellow-800 mb-2">ChromeDriver Incompatível</h4>
+                                            <p class="text-yellow-700 mb-3">
+                                                As versões do Chrome e ChromeDriver não são compatíveis. Para corrigir este problema:
+                                            </p>
+                                            <ol class="list-decimal list-inside text-yellow-700 space-y-2 mb-4">
+                                                <li>Acesse o link: <a href="https://googlechromelabs.github.io/chrome-for-testing" target="_blank" class="text-red-800 hover:text-red-900 font-medium underline">Chrome for Testing</a></li>
+                                                <li>Baixe a versão <span id="requiredVersion" class="font-bold"></span> do ChromeDriver</li>
+                                                <li>Substitua o arquivo <code class="bg-yellow-200 px-1 py-0.5 rounded">chromedriver.exe</code> na pasta do projeto</li>
+                                                <li>Execute a verificação novamente</li>
+                                            </ol>
+                                            <div class="bg-yellow-100 border border-yellow-300 rounded-lg p-3">
+                                                <p class="text-sm text-yellow-800">
+                                                    <i class="fas fa-info-circle mr-2"></i>
+                                                    <strong>Importante:</strong> Sempre use a versão do ChromeDriver que corresponde à versão principal do seu Chrome.
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Configurações modernas com toggles -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
+                    <div class="red-accent border-2 rounded-2xl p-6 hover-lift">
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="flex items-center">
+                                <div class="w-8 h-8 bg-red-800 rounded-full flex items-center justify-center mr-3">
+                                    <i class="fas fa-eye-slash text-white"></i>
+                                </div>
+                                <div>
+                                    <label class="text-lg font-bold text-red-800 cursor-pointer" for="headlessMode">
+                                        Modo Headless
+                                    </label>
+                                    <div class="text-sm text-red-600" id="headlessLabel">Ativado</div>
+                                </div>
+                            </div>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="headlessMode" checked>
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        <small class="text-red-700 text-sm flex items-center">
+                            <i class="fas fa-info-circle mr-2"></i> 
+                            Executa em segundo plano sem abrir o navegador
+                        </small>
+                    </div>
+
+                    <div class="neutral-accent border-2 rounded-2xl p-6 hover-lift">
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="flex items-center">
+                                <div class="w-8 h-8 bg-neutral-800 rounded-full flex items-center justify-center mr-3">
+                                    <i class="fas fa-flask text-white"></i>
+                                </div>
+                                <div>
+                                    <label class="text-lg font-bold text-neutral-800 cursor-pointer" for="modoSimulacao">
+                                        Modo Simulação
+                                    </label>
+                                    <div class="text-sm text-neutral-600" id="simulacaoLabel">Desativado</div>
+                                </div>
+                            </div>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="modoSimulacao">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        <small class="text-neutral-700 text-sm flex items-center">
+                            <i class="fas fa-info-circle mr-2"></i> 
+                            Executa sem enviar dados reais
+                        </small>
+                    </div>
+                </div>
+
+                <form>
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+                        <div class="space-y-2">
+                            <label for="data_emissao" class="block text-lg font-bold text-neutral-800 flex items-center">
+                                <i class="fas fa-calendar-alt text-red-800 mr-2"></i>
+                                Data de Emissão
+                            </label>
+                            <input type="date" id="data_emissao" class="w-full px-4 py-4 border-2 border-neutral-300 rounded-xl focus:outline-none focus:ring-4 focus:ring-red-200 focus:border-red-800 transition-all duration-200 text-lg">
+                        </div>
+                        <div class="space-y-2">
+                            <label for="data_pagamento" class="block text-lg font-bold text-neutral-800 flex items-center">
+                                <i class="fas fa-money-bill-wave text-green-500 mr-2"></i>
+                                Data de Pagamento
+                            </label>
+                            <input type="date" id="data_pagamento" class="w-full px-4 py-4 border-2 border-neutral-300 rounded-xl focus:outline-none focus:ring-4 focus:ring-red-200 focus:border-red-800 transition-all duration-200 text-lg">
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-10">
+                        <div class="space-y-2">
+                            <label for="orgao_publico" class="block text-lg font-bold text-neutral-800 flex items-center">
+                                <i class="fas fa-university text-red-800 mr-2"></i>
+                                Órgão da Administração Pública
+                            </label>
+                            <select id="orgao_publico" class="w-full px-4 py-4 border-2 border-neutral-300 rounded-xl focus:outline-none focus:ring-4 focus:ring-red-200 focus:border-red-800 transition-all duration-200 text-lg" onchange="atualizarParcerias()">
+                                <option value="">Selecione um órgão</option>
+                                <option value="1">FUNDAÇÃO DE ASSISTENCIA SOCIAL E CIDADANIA</option>
+                                <option value="2">Secretaria Municipal de Governança Cidadã e Desenvolvimento Rural</option>
+                                <option value="3">Secretaria Municipal da Inclusão e Desenvolvimento Humano</option>
+                                <option value="4">SECRETARIA MUNICIPAL DE SAÚDE</option>
+                            </select>
+                        </div>
+                        <div class="space-y-2">
+                            <label for="parceria" class="block text-lg font-bold text-neutral-800 flex items-center">
+                                <i class="fas fa-handshake text-neutral-600 mr-2"></i>
+                                Parceria
+                            </label>
+                            <select id="parceria" class="w-full px-4 py-4 border-2 border-neutral-300 rounded-xl focus:outline-none focus:ring-4 focus:ring-red-200 focus:border-red-800 transition-all duration-200 text-lg">
+                                <option value="">Selecione um órgão primeiro</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="text-center">
+                        <button type="button" id="btnIniciar" class="neon-border institutional-gradient hover:institutional-gradient-reverse text-white font-bold py-4 px-12 rounded-2xl text-xl transition-all duration-300 shadow-2xl hover:shadow-red-800/25 transform hover:scale-105 hover:-translate-y-1" onclick="iniciarRobo()">
+                            <i class="fas fa-rocket mr-3"></i>Iniciar Robô
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Terminal de logs moderno -->
+        <div class="card-modern rounded-3xl shadow-2xl overflow-hidden hover-lift logs-card">
+            <div class="institutional-gradient-reverse text-white px-8 py-6 flex items-center">
+                <div class="flex space-x-2 mr-4">
+                    <div class="w-3 h-3 bg-red-500 rounded-full"></div>
+                    <div class="w-3 h-3 bg-yellow-500 rounded-full"></div>
+                    <div class="w-3 h-3 bg-green-500 rounded-full"></div>
+                </div>
+                <h5 class="text-xl font-bold flex items-center">
+                    <i class="fas fa-terminal mr-3"></i>
+                    Terminal de Execução
+                </h5>
+                <div class="ml-auto flex items-center space-x-2 text-sm text-gray-400">
+                    <i class="fas fa-wifi"></i>
+                    <span>conectado</span>
+                </div>
+            </div>
+            <div class="bg-black text-green-400 p-6 h-96 overflow-y-auto font-mono text-sm terminal-glow" id="logArea">
+                <div class="flex items-center space-x-2 mb-2">
+                    <span class="text-green-400">➜</span>
+                    <span class="text-blue-400">robo-prestacao-contas</span>
+                    <span class="text-gray-500">~</span>
+                    <span class="text-green-400">Sistema pronto para execução</span>
+                    <span class="terminal-cursor"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Instruções de Uso -->
+    <div id="modalAjuda" class="fixed inset-0 bg-black/50 bg-opacity-80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-hidden">
+            <!-- Header do Modal -->
+            <div class="bg-gradient-to-r from-red-800 to-red-900 text-white px-8 py-6 flex items-center justify-between">
+                <div class="flex items-center">
+                    <div class="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center mr-4">
+                        <i class="fas fa-graduation-cap text-xl"></i>
+                    </div>
+                    <div>
+                        <h2 class="text-2xl font-bold">Tutorial de Uso</h2>
+                        <p class="text-red-100">Guia completo do Sistema de Prestação de Contas</p>
+                    </div>
+                </div>
+                <button onclick="fecharModalAjuda()" class="text-white hover:text-red-200 text-2xl transition-colors duration-200">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+
+            <!-- Conteúdo do Modal -->
+            <div class="p-8 overflow-y-auto max-h-[calc(90vh-120px)]">
+                <!-- Introdução -->
+                <div class="mb-8">
+                    <div class="bg-blue-50 border-l-4 border-blue-400 p-6 rounded-lg mb-6">
+                        <div class="flex items-start">
+                            <i class="fas fa-info-circle text-blue-400 text-xl mr-3 mt-1"></i>
+                            <div>
+                                <h3 class="text-lg font-bold text-blue-800 mb-2">Bem-vindo ao Sistema!</h3>
+                                <p class="text-blue-700">
+                                    Este sistema automatiza o processo de prestação de contas, facilitando o upload e processamento de documentos. 
+                                    Siga os passos abaixo para usar o sistema corretamente.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Passo 1: Upload de Arquivos -->
+                <div class="mb-8">
+                    <div class="flex items-center mb-4">
+                        <div class="w-8 h-8 bg-red-800 text-white rounded-full flex items-center justify-center mr-3 font-bold">1</div>
+                        <h3 class="text-xl font-bold text-gray-800">Upload de Arquivos</h3>
+                    </div>
+                    <div class="bg-gray-50 rounded-lg p-6 ml-11">
+                        <div class="space-y-4">
+                            <div class="flex items-start">
+                                <i class="fas fa-file-excel text-green-600 text-lg mr-3 mt-1"></i>
+                                <div>
+                                    <h4 class="font-semibold text-gray-800">Planilha Excel</h4>
+                                    <p class="text-gray-600 text-sm">Faça upload da planilha principal com os dados da prestação de contas (.xlsx ou .xls)</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start">
+                                <i class="fas fa-file-pdf text-red-600 text-lg mr-3 mt-1"></i>
+                                <div>
+                                    <h4 class="font-semibold text-gray-800">Arquivos PDF</h4>
+                                    <p class="text-gray-600 text-sm">Adicione todos os documentos PDF relacionados (notas fiscais, comprovantes, etc.)</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mt-4 p-3 bg-yellow-100 border border-yellow-300 rounded-lg">
+                            <p class="text-sm text-yellow-800">
+                                <i class="fas fa-exclamation-triangle mr-2"></i>
+                                <strong>Importante:</strong> Certifique-se de que todos os arquivos estão corretos antes de prosseguir.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Passo 2: Verificação do ChromeDriver -->
+                <div class="mb-8">
+                    <div class="flex items-center mb-4">
+                        <div class="w-8 h-8 bg-red-800 text-white rounded-full flex items-center justify-center mr-3 font-bold">2</div>
+                        <h3 class="text-xl font-bold text-gray-800">Verificação do ChromeDriver</h3>
+                    </div>
+                    <div class="bg-gray-50 rounded-lg p-6 ml-11">
+                        <div class="space-y-4">
+                            <p class="text-gray-700">
+                                Clique em <strong>"Verificar"</strong> para confirmar se o ChromeDriver é compatível com seu navegador Chrome.
+                            </p>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div class="bg-green-50 border border-green-200 rounded-lg p-3">
+                                    <div class="flex items-center text-green-700">
+                                        <i class="fas fa-check-circle mr-2"></i>
+                                        <strong>Se compatível:</strong>
+                                    </div>
+                                    <p class="text-sm text-green-600 mt-1">Prossiga para as configurações</p>
+                                </div>
+                                <div class="bg-red-50 border border-red-200 rounded-lg p-3">
+                                    <div class="flex items-center text-red-700">
+                                        <i class="fas fa-times-circle mr-2"></i>
+                                        <strong>Se incompatível:</strong>
+                                    </div>
+                                    <p class="text-sm text-red-600 mt-1">Siga as instruções para atualizar</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Passo 3: Configurações -->
+                <div class="mb-8">
+                    <div class="flex items-center mb-4">
+                        <div class="w-8 h-8 bg-red-800 text-white rounded-full flex items-center justify-center mr-3 font-bold">3</div>
+                        <h3 class="text-xl font-bold text-gray-800">Configurações do Sistema</h3>
+                    </div>
+                    <div class="bg-gray-50 rounded-lg p-6 ml-11">
+                        <div class="space-y-4">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div class="bg-white border border-gray-200 rounded-lg p-4">
+                                    <div class="flex items-center mb-2">
+                                        <i class="fas fa-eye-slash text-red-800 mr-2"></i>
+                                        <strong class="text-gray-800">Modo Headless</strong>
+                                    </div>
+                                    <p class="text-sm text-gray-600">
+                                        <strong>Ativado:</strong> Executa em segundo plano (recomendado)<br>
+                                        <strong>Desativado:</strong> Mostra o navegador durante a execução
+                                    </p>
+                                </div>
+                                <div class="bg-white border border-gray-200 rounded-lg p-4">
+                                    <div class="flex items-center mb-2">
+                                        <i class="fas fa-flask text-neutral-800 mr-2"></i>
+                                        <strong class="text-gray-800">Modo Simulação</strong>
+                                    </div>
+                                    <p class="text-sm text-gray-600">
+                                        <strong>Ativado:</strong> Testa sem enviar dados reais<br>
+                                        <strong>Desativado:</strong> Execução normal com envio de dados
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Passo 4: Preenchimento de Dados -->
+                <div class="mb-8">
+                    <div class="flex items-center mb-4">
+                        <div class="w-8 h-8 bg-red-800 text-white rounded-full flex items-center justify-center mr-3 font-bold">4</div>
+                        <h3 class="text-xl font-bold text-gray-800">Preenchimento de Dados</h3>
+                    </div>
+                    <div class="bg-gray-50 rounded-lg p-6 ml-11">
+                        <div class="space-y-4">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <h4 class="font-semibold text-gray-800 flex items-center mb-2">
+                                        <i class="fas fa-calendar-alt text-red-800 mr-2"></i>
+                                        Datas
+                                    </h4>
+                                    <ul class="text-sm text-gray-600 space-y-1">
+                                        <li>• <strong>Data de Emissão:</strong> Data dos documentos</li>
+                                        <li>• <strong>Data de Pagamento:</strong> Data de quitação</li>
+                                    </ul>
+                                </div>
+                                <div>
+                                    <h4 class="font-semibold text-gray-800 flex items-center mb-2">
+                                        <i class="fas fa-university text-red-800 mr-2"></i>
+                                        Órgão e Parceria
+                                    </h4>
+                                    <ul class="text-sm text-gray-600 space-y-1">
+                                        <li>• Selecione o órgão responsável</li>
+                                        <li>• Escolha a parceria correspondente</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Passo 5: Execução -->
+                <div class="mb-8">
+                    <div class="flex items-center mb-4">
+                        <div class="w-8 h-8 bg-red-800 text-white rounded-full flex items-center justify-center mr-3 font-bold">5</div>
+                        <h3 class="text-xl font-bold text-gray-800">Execução do Robô</h3>
+                    </div>
+                    <div class="bg-gray-50 rounded-lg p-6 ml-11">
+                        <div class="space-y-4">
+                            <p class="text-gray-700">
+                                Após configurar tudo, clique em <strong>"Iniciar Robô"</strong> para começar o processamento automático.
+                            </p>
+                            <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                                <div class="flex items-start">
+                                    <i class="fas fa-terminal text-blue-600 mr-3 mt-1"></i>
+                                    <div>
+                                        <h4 class="font-semibold text-blue-800">Terminal de Execução</h4>
+                                        <p class="text-sm text-blue-700">
+                                            Acompanhe o progresso em tempo real através do terminal na parte inferior da tela.
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Dicas Importantes -->
+                <div class="bg-gradient-to-r from-yellow-50 to-orange-50 border border-yellow-200 rounded-lg p-6">
+                    <div class="flex items-start">
+                        <i class="fas fa-lightbulb text-yellow-600 text-xl mr-3 mt-1"></i>
+                        <div>
+                            <h3 class="text-lg font-bold text-yellow-800 mb-3">Dicas Importantes</h3>
+                            <ul class="space-y-2 text-yellow-700">
+                                <li class="flex items-start">
+                                    <i class="fas fa-check text-yellow-600 mr-2 mt-1 text-sm"></i>
+                                    <span>Mantenha o navegador Chrome atualizado</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <i class="fas fa-check text-yellow-600 mr-2 mt-1 text-sm"></i>
+                                    <span>Verifique a conexão com a internet antes de iniciar</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <i class="fas fa-check text-yellow-600 mr-2 mt-1 text-sm"></i>
+                                    <span>Use o modo simulação para testar antes da execução final</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <i class="fas fa-check text-yellow-600 mr-2 mt-1 text-sm"></i>
+                                    <span>Não feche o sistema durante a execução do robô</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Footer do Modal -->
+            <div class="bg-gray-50 px-8 py-4 flex justify-end">
+                <button onclick="fecharModalAjuda()" class="bg-gradient-to-r from-red-800 to-red-900 hover:from-red-900 hover:to-red-800 text-white font-bold py-3 px-6 rounded-xl transition-all duration-200 flex items-center shadow-lg hover:shadow-xl">
+                    <i class="fas fa-check mr-2"></i>
+                    Entendi
+                </button>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>

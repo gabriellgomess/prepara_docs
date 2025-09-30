@@ -3,15 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Robô Prestação de Contas</title>
+    <link rel="icon" type="image/x-icon" href="./icon-document.png" />
+    <link rel="shortcut icon" href="../../extrator_docs/images/icon-document.png" type="image/x-icon">
+    <title>Systemdoc</title>
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <style type="text/tailwindcss">
       @theme {
-        --color-primary: #991b1b;
+        --color-primary: #10b981;
         --color-secondary: #262626;
-        --color-success: #10b981;
+        --color-success: #22c55e;
         --color-danger: #ef4444;
         --color-warning: #f59e0b;
         --color-light: #f8fafc;
@@ -28,7 +30,7 @@
       }
       
       .gradient-bg {
-        background: linear-gradient(135deg, #991b1b 0%, #262626 50%, #991b1b 100%);
+        background: linear-gradient(135deg, #278036 0%, #6ab170 100%);
       }
       
       .card-modern {
@@ -57,11 +59,6 @@
         box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
       }
       
-      .neon-border {
-        border: 2px solid transparent;
-        background: linear-gradient(45deg, #991b1b, #262626, #991b1b) border-box;
-        background-clip: padding-box, border-box;
-      }
       
       /* Toggle Switch Styles */
       .toggle-switch {
@@ -102,11 +99,11 @@
       }
       
       input:checked + .slider {
-        background-color: #991b1b;
+        background-color: #10b981;
       }
       
       input:focus + .slider {
-        box-shadow: 0 0 1px #991b1b;
+        box-shadow: 0 0 1px #10b981;
       }
       
       input:checked + .slider:before {
@@ -120,22 +117,79 @@
       }
       
       .institutional-gradient {
-        background: linear-gradient(135deg, #991b1b 0%, #262626 100%);
+        background: linear-gradient(135deg, #10b981 0%, #262626 100%);
       }
       
       .institutional-gradient-reverse {
-        background: linear-gradient(135deg, #262626 0%, #991b1b 100%);
+        background: linear-gradient(135deg, #262626 0%, #10b981 100%);
       }
       
       .red-accent {
-        background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%);
-        border-color: #f87171;
+        background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+        border-color: #4ade80;
       }
       
       .neutral-accent {
         background: linear-gradient(135deg, #fafafa 0%, #f5f5f5 100%);
         border-color: #737373;
       }
+
+      .select_org{
+        appearance: none; /* Remove estilo nativo */
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        background: url("data:image/svg+xml;utf8,<svg fill='black' height='24' viewBox='0 0 24 24' width='24' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/></svg>") 
+                    no-repeat right 0.75rem center;
+      }
+
+      .file-input {
+      transition: all 0.3s ease;
+      border-color: #d1d5db;
+      position: relative;
+      cursor: pointer;
+      font-family: 'Inter', sans-serif;
+      font-weight: 500;
+      animation: slideIn 0.5s ease-out;
+    }
+    
+    .file-input:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(34, 197, 94, 0.15);
+      border-color: #22c55e;
+      background-color: #f0fdf4;
+    }
+    
+    .file-input:focus {
+      border-color: #16a34a;
+      box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.1);
+      background-color: #f0fdf4;
+    }
+    
+    .file-input::file-selector-button {
+      background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 14px;
+      cursor: pointer;
+      margin-right: 16px;
+      transition: all 0.3s ease;
+      box-shadow: 0 2px 4px rgba(34, 197, 94, 0.2);
+    }
+    
+    .file-input::file-selector-button:hover {
+      background: linear-gradient(135deg, #16a34a 0%, #15803d 100%);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 8px rgba(34, 197, 94, 0.3);
+    }
+    
+    .file-input::file-selector-button:active {
+      transform: translateY(0);
+      box-shadow: 0 2px 4px rgba(34, 197, 94, 0.2);
+    }
+
     </style>
 
     <!-- Fontawesome Icons -->
@@ -223,7 +277,7 @@
                 text: "Todos os arquivos serão excluídos permanentemente!",
                 icon: 'warning',
                 showCancelButton: true,
-                confirmButtonColor: '#991b1b',
+                confirmButtonColor: '#10b981',
                 cancelButtonColor: '#6b7280',
                 confirmButtonText: 'Sim, excluir tudo!',
                 cancelButtonText: 'Cancelar'
@@ -266,7 +320,7 @@
                 text: "A planilha será excluída permanentemente!",
                 icon: 'warning',
                 showCancelButton: true,
-                confirmButtonColor: '#991b1b',
+                confirmButtonColor: '#10b981',
                 cancelButtonColor: '#6b7280',
                 confirmButtonText: 'Sim, excluir!',
                 cancelButtonText: 'Cancelar'
@@ -433,10 +487,10 @@
                             pdfItem.className = 'flex items-center justify-between p-3 hover:bg-gray-50 border-b border-gray-100 transition-all duration-200 hover:scale-105';
                             pdfItem.innerHTML = `
                                 <span class="flex items-center">
-                                    <i class="fas fa-file-pdf text-red-800 mr-3 text-lg"></i> 
+                                    <i class="fas fa-file-pdf text-green-800 mr-3 text-lg"></i> 
                                     <span class="font-medium">${pdf}</span>
                                 </span>
-                                <span class="px-2 py-1 bg-red-100 text-red-800 rounded-full text-xs font-medium">PDF</span>
+                                <span class="px-2 py-1 bg-green-100 text-green-800 rounded-full text-xs font-medium">PDF</span>
                             `;
                             listaArquivos.appendChild(pdfItem);
                         });
@@ -584,12 +638,12 @@
                     } else {
                         // Manter versão expandida quando incompatível ou erro
                         compatibilityStatus.classList.remove('hidden');
-                        compatibilityStatus.className = 'p-4 rounded-lg border-l-4 border-red-400 bg-red-50';
+                        compatibilityStatus.className = 'p-4 rounded-lg border-l-4 border-green-400 bg-green-50';
                         statusIcon.innerHTML = '❌';
                         statusTitle.textContent = 'Incompatível!';
-                        statusTitle.className = 'font-bold text-red-800';
+                        statusTitle.className = 'font-bold text-green-800';
                         statusMessage.textContent = data.message || 'As versões do Chrome e ChromeDriver não são compatíveis.';
-                        statusMessage.className = 'text-sm text-red-700';
+                        statusMessage.className = 'text-sm text-green-700';
                         instructionsArea.classList.remove('hidden');
                         
                         // Extrai versão principal do Chrome para mostrar na instrução
@@ -679,16 +733,11 @@
     <div class="container mx-auto max-w-7xl px-4 py-8">
         <!-- Header moderno com glassmorphism -->
         <div class="text-center mb-8">
-            <div class="bg-white rounded-2xl p-8 hover-lift relative">             
-                
-                <!-- Logo da empresa -->
-                <div class="mb-6">
-                    <img src="/logo_horizontal_color.png" alt="Logo da Empresa" class="mx-auto h-16 md:h-20 object-contain filter drop-shadow-lg">
-                </div>
-                <h1 class="text-5xl font-bold mb-2 text-gray-500">
+            <div class="bg-white rounded-2xl p-8 hover-lift relative flex flex-col items-center gap-5">             
+                <h1 class="text-5xl font-bold"><span class="text-green-500">System</span>doc</h1>
+                <h2 class="text-3xl font-bold mb-2 text-gray-700">
                     Robô Prestação de Contas
-                </h1>
-                <p class="text-gray-500 text-lg">Sistema Automatizado de Gestão de Documentos</p>
+                </h2>
             </div>
         </div>
 
@@ -723,12 +772,12 @@
                                     Planilha Excel
                                 </h6>
                                 <div class="space-y-4">
-                                    <input type="file" id="planilhaInput" class="w-full px-4 py-3 border-2 border-green-300 rounded-xl focus:outline-none focus:ring-4 focus:ring-green-200 focus:border-green-500 transition-all duration-200" accept=".xlsx">
+                                    <input type="file" id="planilhaInput" class="file-input w-full px-4 py-3 border-2 border-green-300 rounded-xl focus:outline-none focus:ring-4 focus:ring-green-200 focus:border-green-500 transition-all duration-200" accept=".xlsx">
                                     <div class="flex gap-3">
-                                        <button type="button" class="flex-1 bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white font-bold py-3 px-4 rounded-xl transition-all duration-200 flex items-center justify-center shadow-lg hover:shadow-xl transform hover:scale-105" onclick="uploadPlanilha()">
+                                        <button type="button" class="flex-1 bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white font-bold py-3 px-4 rounded-xl transition-all duration-200 flex items-center justify-center shadow-lg hover:shadow-xl transform hover:scale-105 hover:cursor-pointer" onclick="uploadPlanilha()">
                                             <i class="fas fa-cloud-upload-alt mr-2"></i> Upload
                                         </button>
-                                        <button type="button" class="flex-1 bg-gradient-to-r from-red-800 to-red-900 hover:from-red-900 hover:to-red-800 text-white font-bold py-3 px-4 rounded-xl transition-all duration-200 flex items-center justify-center shadow-lg hover:shadow-xl transform hover:scale-105" onclick="excluirPlanilha()">
+                                        <button type="button" class="flex-1 bg-gradient-to-r from-red-800 to-red-900 hover:from-red-900 hover:to-red-800 text-white font-bold py-3 px-4 rounded-xl transition-all duration-200 flex items-center justify-center shadow-lg hover:shadow-xl transform hover:scale-105 hover:cursor-pointer" onclick="excluirPlanilha()">
                                             <i class="fas fa-trash-alt mr-2"></i> Excluir
                                         </button>
                                     </div>
@@ -740,17 +789,17 @@
                         </div>
                         <div class="red-accent border-2 rounded-2xl shadow-lg hover-lift">
                             <div class="p-6">
-                                <h6 class="text-xl font-bold mb-4 flex items-center text-red-800">
-                                    <i class="fas fa-file-pdf text-red-800 mr-2 text-2xl"></i>
+                                <h6 class="text-xl font-bold mb-4 flex items-center text-green-800">
+                    <i class="fas fa-file-pdf text-green-800 mr-2 text-2xl"></i>
                                     Arquivos PDF
                                 </h6>
                                 <div class="space-y-4">
-                                    <input type="file" id="pdfInput" class="w-full px-4 py-3 border-2 border-red-300 rounded-xl focus:outline-none focus:ring-4 focus:ring-red-200 focus:border-red-800 transition-all duration-200" accept=".pdf" multiple>
+                                    <input type="file" id="pdfInput" class="file-input w-full px-4 py-3 border-2 border-green-300 rounded-xl focus:outline-none focus:ring-4 focus:ring-green-200 focus:border-green-800 transition-all duration-200" accept=".pdf" multiple>
                                     <div class="flex gap-3">
-                                        <button type="button" class="flex-1 bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white font-bold py-3 px-4 rounded-xl transition-all duration-200 flex items-center justify-center shadow-lg hover:shadow-xl transform hover:scale-105" onclick="uploadPDFs()">
+                                        <button type="button" class="flex-1 bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white font-bold py-3 px-4 rounded-xl transition-all duration-200 flex items-center justify-center shadow-lg hover:shadow-xl transform hover:scale-105 hover:cursor-pointer" onclick="uploadPDFs()">
                                             <i class="fas fa-cloud-upload-alt mr-2"></i> Upload
                                         </button>
-                                        <button type="button" class="flex-1 bg-gradient-to-r from-red-800 to-red-900 hover:from-red-900 hover:to-red-800 text-white font-bold py-3 px-4 rounded-xl transition-all duration-200 flex items-center justify-center shadow-lg hover:shadow-xl transform hover:scale-105" onclick="excluirPDFs()">
+                                        <button type="button" class="flex-1 bg-gradient-to-r from-red-800 to-red-900 hover:from-red-900 hover:to-red-800 text-white font-bold py-3 px-4 rounded-xl transition-all duration-200 flex items-center justify-center shadow-lg hover:shadow-xl transform hover:scale-105 hover:cursor-pointer" onclick="excluirPDFs()">
                                             <i class="fas fa-broom mr-2"></i> Limpar
                                         </button>
                                     </div>
@@ -805,15 +854,15 @@
                         <div class="red-accent border-2 rounded-2xl shadow-lg hover-lift p-6">
                             <div class="flex items-center justify-between mb-4">
                                 <div class="flex items-center">
-                                    <div class="w-8 h-8 bg-red-800 rounded-full flex items-center justify-center mr-3">
+                                    <div class="w-8 h-8 bg-green-800 rounded-full flex items-center justify-center mr-3">
                                         <i class="fas fa-chrome text-white"></i>
                                     </div>
                                     <div>
-                                        <h6 class="text-xl font-bold text-red-800">Status de Compatibilidade</h6>
-                                        <p class="text-sm text-red-600">Verifica se o ChromeDriver é compatível com o navegador Chrome</p>
+                                        <h6 class="text-xl font-bold text-green-800">Status de Compatibilidade</h6>
+                                        <p class="text-sm text-green-600">Verifica se o ChromeDriver é compatível com o navegador Chrome</p>
                                     </div>
                                 </div>
-                                <button type="button" id="btnVerificarDriver" class="bg-gradient-to-r from-red-800 to-red-900 hover:from-red-900 hover:to-red-800 text-white font-bold py-2 px-4 rounded-xl transition-all duration-200 flex items-center shadow-lg hover:shadow-xl transform hover:scale-105" onclick="verificarCompatibilidadeDriver()">
+                                <button type="button" id="btnVerificarDriver" class="bg-gradient-to-r from-green-800 to-green-900 hover:from-green-900 hover:to-green-800 text-white font-bold py-2 px-4 rounded-xl transition-all duration-200 flex items-center shadow-lg hover:shadow-xl transform hover:scale-105" onclick="verificarCompatibilidadeDriver()">
                                     <i class="fas fa-search mr-2"></i> Verificar
                                 </button>
                             </div>
@@ -851,7 +900,7 @@
                                                 As versões do Chrome e ChromeDriver não são compatíveis. Para corrigir este problema:
                                             </p>
                                             <ol class="list-decimal list-inside text-yellow-700 space-y-2 mb-4">
-                                                <li>Acesse o link: <a href="https://googlechromelabs.github.io/chrome-for-testing" target="_blank" class="text-red-800 hover:text-red-900 font-medium underline">Chrome for Testing</a></li>
+                                                <li>Acesse o link: <a href="https://googlechromelabs.github.io/chrome-for-testing" target="_blank" class="text-green-800 hover:text-green-900 font-medium underline">Chrome for Testing</a></li>
                                                 <li>Baixe a versão <span id="requiredVersion" class="font-bold"></span> do ChromeDriver</li>
                                                 <li>Substitua o arquivo <code class="bg-yellow-200 px-1 py-0.5 rounded">chromedriver.exe</code> na pasta do projeto</li>
                                                 <li>Execute a verificação novamente</li>
@@ -875,14 +924,14 @@
                     <div class="red-accent border-2 rounded-2xl p-6 hover-lift">
                         <div class="flex items-center justify-between mb-4">
                             <div class="flex items-center">
-                                <div class="w-8 h-8 bg-red-800 rounded-full flex items-center justify-center mr-3">
+                                <div class="w-8 h-8 bg-green-800 rounded-full flex items-center justify-center mr-3">
                                     <i class="fas fa-eye-slash text-white"></i>
                                 </div>
                                 <div>
-                                    <label class="text-lg font-bold text-red-800 cursor-pointer" for="headlessMode">
+                                    <label class="text-lg font-bold text-green-800 cursor-pointer" for="headlessMode">
                                         Modo Headless
                                     </label>
-                                    <div class="text-sm text-red-600" id="headlessLabel">Ativado</div>
+                                    <div class="text-sm text-green-600" id="headlessLabel">Ativado</div>
                                 </div>
                             </div>
                             <label class="toggle-switch">
@@ -890,7 +939,7 @@
                                 <span class="slider"></span>
                             </label>
                         </div>
-                        <small class="text-red-700 text-sm flex items-center">
+                        <small class="text-green-700 text-sm flex items-center">
                             <i class="fas fa-info-circle mr-2"></i> 
                             Executa em segundo plano sem abrir o navegador
                         </small>
@@ -925,26 +974,26 @@
                     <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
                         <div class="space-y-2">
                             <label for="data_emissao" class="block text-lg font-bold text-neutral-800 flex items-center">
-                                <i class="fas fa-calendar-alt text-red-800 mr-2"></i>
+                                <i class="fas fa-calendar-alt text-green-800 mr-2"></i>
                                 Data de Emissão
                             </label>
-                            <input type="date" id="data_emissao" class="w-full px-4 py-4 border-2 border-neutral-300 rounded-xl focus:outline-none focus:ring-4 focus:ring-red-200 focus:border-red-800 transition-all duration-200 text-lg">
+                            <input type="date" id="data_emissao" class="w-full px-4 py-4 border-2 border-neutral-300 rounded-xl focus:outline-none focus:ring-4 focus:ring-green-200 focus:border-green-800 transition-all duration-200 text-lg">
                         </div>
                         <div class="space-y-2">
                             <label for="data_pagamento" class="block text-lg font-bold text-neutral-800 flex items-center">
                                 <i class="fas fa-money-bill-wave text-green-500 mr-2"></i>
                                 Data de Pagamento
                             </label>
-                            <input type="date" id="data_pagamento" class="w-full px-4 py-4 border-2 border-neutral-300 rounded-xl focus:outline-none focus:ring-4 focus:ring-red-200 focus:border-red-800 transition-all duration-200 text-lg">
+                            <input type="date" id="data_pagamento" class="w-full px-4 py-4 border-2 border-neutral-300 rounded-xl focus:outline-none focus:ring-4 focus:ring-green-200 focus:border-green-800 transition-all duration-200 text-lg">
                         </div>
                     </div>
                     <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-10">
                         <div class="space-y-2">
                             <label for="orgao_publico" class="block text-lg font-bold text-neutral-800 flex items-center">
-                                <i class="fas fa-university text-red-800 mr-2"></i>
+                                <i class="fas fa-university text-green-800 mr-2"></i>
                                 Órgão da Administração Pública
                             </label>
-                            <select id="orgao_publico" class="w-full px-4 py-4 border-2 border-neutral-300 rounded-xl focus:outline-none focus:ring-4 focus:ring-red-200 focus:border-red-800 transition-all duration-200 text-lg" onchange="atualizarParcerias()">
+                            <select id="orgao_publico" class="select_org w-full px-4 py-4 border-2 border-neutral-300 rounded-xl focus:outline-none focus:ring-4 focus:ring-green-200 focus:border-green-800 transition-all duration-200 text-lg" onchange="atualizarParcerias()">
                                 <option value="">Selecione um órgão</option>
                                 <option value="1">FUNDAÇÃO DE ASSISTENCIA SOCIAL E CIDADANIA</option>
                                 <option value="2">Secretaria Municipal de Governança Cidadã e Desenvolvimento Rural</option>
@@ -957,14 +1006,14 @@
                                 <i class="fas fa-handshake text-neutral-600 mr-2"></i>
                                 Parceria
                             </label>
-                            <select id="parceria" class="w-full px-4 py-4 border-2 border-neutral-300 rounded-xl focus:outline-none focus:ring-4 focus:ring-red-200 focus:border-red-800 transition-all duration-200 text-lg">
+                            <select id="parceria" class="select_org w-full px-4 py-4 border-2 border-neutral-300 rounded-xl focus:outline-none focus:ring-4 focus:ring-green-200 focus:border-green-800 transition-all duration-200 text-lg">
                                 <option value="">Selecione um órgão primeiro</option>
                             </select>
                         </div>
                     </div>
                     
                     <div class="text-center">
-                        <button type="button" id="btnIniciar" class="neon-border institutional-gradient hover:institutional-gradient-reverse text-white font-bold py-4 px-12 rounded-2xl text-xl transition-all duration-300 shadow-2xl hover:shadow-red-800/25 transform hover:scale-105 hover:-translate-y-1" onclick="iniciarRobo()">
+                        <button type="button" id="btnIniciar" class="neon-border institutional-gradient hover:institutional-gradient-reverse text-white font-bold py-4 px-12 rounded-2xl text-xl transition-all duration-300 shadow-2xl hover:shadow-green-800/25 transform hover:scale-105 hover:-translate-y-1 hover:cursor-pointer" onclick="iniciarRobo()">
                             <i class="fas fa-rocket mr-3"></i>Iniciar Robô
                         </button>
                     </div>
@@ -976,7 +1025,7 @@
         <div class="card-modern rounded-3xl shadow-2xl overflow-hidden hover-lift logs-card">
             <div class="institutional-gradient-reverse text-white px-8 py-6 flex items-center">
                 <div class="flex space-x-2 mr-4">
-                    <div class="w-3 h-3 bg-red-500 rounded-full"></div>
+                    <div class="w-3 h-3 bg-green-500 rounded-full"></div>
                     <div class="w-3 h-3 bg-yellow-500 rounded-full"></div>
                     <div class="w-3 h-3 bg-green-500 rounded-full"></div>
                 </div>
@@ -1005,17 +1054,17 @@
     <div id="modalAjuda" class="fixed inset-0 bg-black/50 bg-opacity-80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
         <div class="bg-white rounded-3xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-hidden">
             <!-- Header do Modal -->
-            <div class="bg-gradient-to-r from-red-800 to-red-900 text-white px-8 py-6 flex items-center justify-between">
+            <div class="bg-gradient-to-r from-green-800 to-green-900 text-white px-8 py-6 flex items-center justify-between">
                 <div class="flex items-center">
                     <div class="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center mr-4">
                         <i class="fas fa-graduation-cap text-xl"></i>
                     </div>
                     <div>
                         <h2 class="text-2xl font-bold">Tutorial de Uso</h2>
-                        <p class="text-red-100">Guia completo do Sistema de Prestação de Contas</p>
+                        <p class="text-green-100">Guia completo do Sistema de Prestação de Contas</p>
                     </div>
                 </div>
-                <button onclick="fecharModalAjuda()" class="text-white hover:text-red-200 text-2xl transition-colors duration-200">
+                <button onclick="fecharModalAjuda()" class="text-white hover:text-green-200 text-2xl transition-colors duration-200">
                     <i class="fas fa-times"></i>
                 </button>
             </div>
@@ -1041,7 +1090,7 @@
                 <!-- Passo 1: Upload de Arquivos -->
                 <div class="mb-8">
                     <div class="flex items-center mb-4">
-                        <div class="w-8 h-8 bg-red-800 text-white rounded-full flex items-center justify-center mr-3 font-bold">1</div>
+                        <div class="w-8 h-8 bg-green-800 text-white rounded-full flex items-center justify-center mr-3 font-bold">1</div>
                         <h3 class="text-xl font-bold text-gray-800">Upload de Arquivos</h3>
                     </div>
                     <div class="bg-gray-50 rounded-lg p-6 ml-11">
@@ -1054,7 +1103,7 @@
                                 </div>
                             </div>
                             <div class="flex items-start">
-                                <i class="fas fa-file-pdf text-red-600 text-lg mr-3 mt-1"></i>
+                                <i class="fas fa-file-pdf text-green-600 text-lg mr-3 mt-1"></i>
                                 <div>
                                     <h4 class="font-semibold text-gray-800">Arquivos PDF</h4>
                                     <p class="text-gray-600 text-sm">Adicione todos os documentos PDF relacionados (notas fiscais, comprovantes, etc.)</p>
@@ -1073,7 +1122,7 @@
                 <!-- Passo 2: Verificação do ChromeDriver -->
                 <div class="mb-8">
                     <div class="flex items-center mb-4">
-                        <div class="w-8 h-8 bg-red-800 text-white rounded-full flex items-center justify-center mr-3 font-bold">2</div>
+                        <div class="w-8 h-8 bg-green-800 text-white rounded-full flex items-center justify-center mr-3 font-bold">2</div>
                         <h3 class="text-xl font-bold text-gray-800">Verificação do ChromeDriver</h3>
                     </div>
                     <div class="bg-gray-50 rounded-lg p-6 ml-11">
@@ -1089,12 +1138,12 @@
                                     </div>
                                     <p class="text-sm text-green-600 mt-1">Prossiga para as configurações</p>
                                 </div>
-                                <div class="bg-red-50 border border-red-200 rounded-lg p-3">
-                                    <div class="flex items-center text-red-700">
+                                <div class="bg-green-50 border border-green-200 rounded-lg p-3">
+                                    <div class="flex items-center text-green-700">
                                         <i class="fas fa-times-circle mr-2"></i>
                                         <strong>Se incompatível:</strong>
                                     </div>
-                                    <p class="text-sm text-red-600 mt-1">Siga as instruções para atualizar</p>
+                                    <p class="text-sm text-green-600 mt-1">Siga as instruções para atualizar</p>
                                 </div>
                             </div>
                         </div>
@@ -1104,7 +1153,7 @@
                 <!-- Passo 3: Configurações -->
                 <div class="mb-8">
                     <div class="flex items-center mb-4">
-                        <div class="w-8 h-8 bg-red-800 text-white rounded-full flex items-center justify-center mr-3 font-bold">3</div>
+                        <div class="w-8 h-8 bg-green-800 text-white rounded-full flex items-center justify-center mr-3 font-bold">3</div>
                         <h3 class="text-xl font-bold text-gray-800">Configurações do Sistema</h3>
                     </div>
                     <div class="bg-gray-50 rounded-lg p-6 ml-11">
@@ -1112,7 +1161,7 @@
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div class="bg-white border border-gray-200 rounded-lg p-4">
                                     <div class="flex items-center mb-2">
-                                        <i class="fas fa-eye-slash text-red-800 mr-2"></i>
+                                        <i class="fas fa-eye-slash text-green-800 mr-2"></i>
                                         <strong class="text-gray-800">Modo Headless</strong>
                                     </div>
                                     <p class="text-sm text-gray-600">
@@ -1138,7 +1187,7 @@
                 <!-- Passo 4: Preenchimento de Dados -->
                 <div class="mb-8">
                     <div class="flex items-center mb-4">
-                        <div class="w-8 h-8 bg-red-800 text-white rounded-full flex items-center justify-center mr-3 font-bold">4</div>
+                        <div class="w-8 h-8 bg-green-800 text-white rounded-full flex items-center justify-center mr-3 font-bold">4</div>
                         <h3 class="text-xl font-bold text-gray-800">Preenchimento de Dados</h3>
                     </div>
                     <div class="bg-gray-50 rounded-lg p-6 ml-11">
@@ -1146,7 +1195,7 @@
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div>
                                     <h4 class="font-semibold text-gray-800 flex items-center mb-2">
-                                        <i class="fas fa-calendar-alt text-red-800 mr-2"></i>
+                                        <i class="fas fa-calendar-alt text-green-800 mr-2"></i>
                                         Datas
                                     </h4>
                                     <ul class="text-sm text-gray-600 space-y-1">
@@ -1156,7 +1205,7 @@
                                 </div>
                                 <div>
                                     <h4 class="font-semibold text-gray-800 flex items-center mb-2">
-                                        <i class="fas fa-university text-red-800 mr-2"></i>
+                                        <i class="fas fa-university text-green-800 mr-2"></i>
                                         Órgão e Parceria
                                     </h4>
                                     <ul class="text-sm text-gray-600 space-y-1">
@@ -1172,7 +1221,7 @@
                 <!-- Passo 5: Execução -->
                 <div class="mb-8">
                     <div class="flex items-center mb-4">
-                        <div class="w-8 h-8 bg-red-800 text-white rounded-full flex items-center justify-center mr-3 font-bold">5</div>
+                        <div class="w-8 h-8 bg-green-800 text-white rounded-full flex items-center justify-center mr-3 font-bold">5</div>
                         <h3 class="text-xl font-bold text-gray-800">Execução do Robô</h3>
                     </div>
                     <div class="bg-gray-50 rounded-lg p-6 ml-11">
@@ -1226,7 +1275,7 @@
 
             <!-- Footer do Modal -->
             <div class="bg-gray-50 px-8 py-4 flex justify-end">
-                <button onclick="fecharModalAjuda()" class="bg-gradient-to-r from-red-800 to-red-900 hover:from-red-900 hover:to-red-800 text-white font-bold py-3 px-6 rounded-xl transition-all duration-200 flex items-center shadow-lg hover:shadow-xl">
+                <button onclick="fecharModalAjuda()" class="bg-gradient-to-r from-green-800 to-green-900 hover:from-green-900 hover:to-green-800 text-white font-bold py-3 px-6 rounded-xl transition-all duration-200 flex items-center shadow-lg hover:shadow-xl">
                     <i class="fas fa-check mr-2"></i>
                     Entendi
                 </button>

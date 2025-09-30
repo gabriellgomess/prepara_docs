@@ -3,12 +3,13 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Sistema de Processamento de Documentos - Casa de Saúde Menino Jesus de Praga</title>
+  <title>Systemdoc</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="icon" type="image/x-icon" href="./images/icon-document.png" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <style>
     @keyframes slideIn {
-      from { transform: translateX(-20px); opacity: 0; }
+      from { transform: translateX(-30px); opacity: 0; }
       to { transform: translateX(0); opacity: 1; }
     }
     
@@ -16,7 +17,46 @@
       from { opacity: 0; transform: scale(0.95); }
       to { opacity: 1; transform: scale(1); }
     }
-    
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    @keyframes fadeInBackground {
+      from {
+        opacity: 0;
+      }
+      to {
+        opacity: 1;
+      }
+    }
+
+    @keyframes slideInUp {
+      from {
+        opacity: 0;
+        transform: translateY(25px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .documentation {
+      animation: fadeInScale 1s ease-out 0.2s both;
+      transition: all 0.3s ease;
+    }
+
+    .documentation:hover {
+      transform: scale(1.05);
+      box-shadow: 0 12px 35px rgba(33, 226, 26, 0.582);
+    }
+
     .sidebar {
       transition: all 0.3s ease;
       animation: slideIn 0.5s ease-out;
@@ -27,6 +67,64 @@
       animation: fadeIn 0.6s ease-out;
     }
     
+    .input-login {
+      box-shadow: 0 4px 6px rgba(33, 226, 26, 0.582);
+      box-sizing: border-box;
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      animation: slideInUp 0.9s ease-out;
+    }
+    
+    .input-wrapper:focus-within .input-login {
+      box-shadow: 0 4px 6px rgba(33, 226, 26, 0.582);
+      transform: translateY(-2px);
+      transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      animation: slideInUp 0.9s ease-out;
+    }
+
+    .input-wrapper:focus-within .input-icon {
+      transform: translateY(-2px);
+      transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .input-wrapper:focus-within .button-eye{
+      transform: translateY(-15px);
+      transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    } 
+
+    .input-icon{
+      animation: slideInUp 1s ease-out;
+    }
+
+    .button-submit{
+      animation: slideInUp 1s ease-out;
+      background: #20723d;
+      color: white;
+      width: 100%;
+    }
+
+    .button-submit:hover{
+      transform: translateY(-2px);
+      box-shadow: 0 4px 6px rgba(33, 226, 26, 0.582);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      opacity: 0.9;
+    }
+
+    .input-wrapper{
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+
+    .input-icon {
+      position: absolute;
+      left: 10px;
+      width: 20px;
+      height: 20px;
+      color: green;
+      z-index: 1;
+      /* transition: all var(--transition-smooth); */
+      transform-origin: center;
+    }
+
     .menu-item {
       transition: all 0.3s ease;
       position: relative;
@@ -35,12 +133,12 @@
     
     .menu-item:hover {
       transform: translateX(5px);
-      background: linear-gradient(135deg, #991b1b 0%, #7f1d1d 100%);
+      background: linear-gradient(135deg, #20723d 0%, #6ab170 100%);
     }
     
     .menu-item.active {
-      background: linear-gradient(135deg, #991b1b 0%, #7f1d1d 100%);
-      box-shadow: 0 4px 12px rgba(153, 27, 27, 0.3);
+      background: linear-gradient(135deg, #20723d 0%, #6ab170 100%);
+      box-shadow: 0 4px 12px rgba(33, 226, 26, 0.582);
       color: white !important;
     }
     
@@ -51,7 +149,7 @@
       top: 0;
       height: 100%;
       width: 4px;
-      background: #dc2626;
+      background: rgba(33, 226, 26, 0.295);
       transform: scaleY(0);
       transition: transform 0.3s ease;
     }
@@ -73,6 +171,23 @@
     .feature-card {
       transition: all 0.3s ease;
       cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+    }
+    
+    .feature-card .text-center {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+    }
+    
+    .feature-card .text-center > p {
+      flex-grow: 1;
+    }
+    
+    .feature-card .flex.justify-center {
+      margin-top: auto;
     }
     
     .feature-card:hover {
@@ -103,6 +218,36 @@
       .content-area {
         margin-left: 0 !important;
       }
+      
+      .feature-card {
+        min-height: 350px;
+      }
+      
+      .feature-card .text-center > p {
+        margin-bottom: 1.5rem;
+      }
+    }
+    
+    @media (max-width: 480px) {
+      .feature-card {
+        min-height: 320px;
+        padding: 1.5rem !important;
+      }
+      
+      .feature-card h3 {
+        font-size: 1.25rem !important;
+        margin-bottom: 0.75rem !important;
+      }
+      
+      .feature-card .text-center > p {
+        font-size: 0.875rem;
+        margin-bottom: 1rem;
+      }
+      
+      .feature-card button {
+        padding: 0.75rem 1.25rem !important;
+        font-size: 0.875rem !important;
+      }
     }
     
     .overlay {
@@ -121,51 +266,69 @@
     }
     
     .login-container {
-      background: linear-gradient(135deg, #4b4b4b 0%, #919191 100%);
+      background: linear-gradient(135deg, #20723d 0%, #6ab170 100%);
       min-height: 100vh;
+      animation: fadeInBackground 1s ease-out;
+      transition: background 0.3s ease;
     }
     
     .login-card {
+      animation: slideInUp 0.8s ease-out;
       backdrop-filter: blur(10px);
       background: rgba(255, 255, 255, 0.95);
     }
+
+    .title {
+        animation: fadeInUp 0.8s ease-out 0.4s both;
+    }
+
+    .desc {
+      animation: fadeInUp 0.8s ease-out 0.5s both;
+    }
+
   </style>
 </head>
 <body class="bg-gradient-to-br from-neutral-100 to-neutral-200 min-h-screen">
   <!-- Tela de Login -->
   <div id="login-screen" class="login-container flex items-center justify-center">
-    <div class="login-card rounded-2xl shadow-2xl p-8 w-full max-w-md mx-4">
+    <div class="login-card rounded-2xl shadow-2xl p-6 w-full max-w-md mx-4 container-login">
       <div class="text-center mb-8">
-        <div class="bg-gradient-to-br from-red-600 to-red-800 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4">
+        <div class="bg-gradient-to-br from-green-600 to-green-400 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4 documentation">
           <i class="fas fa-file-alt text-3xl text-white"></i>
         </div>
-        <h1 class="text-2xl font-bold text-gray-800 mb-2">Sistema de Documentos</h1>
-        <p class="text-gray-600">Casa de Saúde Menino Jesus</p>
+        <h1 class="text-2xl font-bold text-gray-800 mb-2 title"><span class="text-green-500">System</span>doc</h1>
+        <p class="text-gray-600 desc">Sistema de documentos</p>
       </div>
 
       <form id="login-form" onsubmit="handleLogin(event)">
         <div class="space-y-6">
           <div>
-            <label for="username" class="block text-sm font-medium text-gray-700 mb-2">
-              <i class="fas fa-user mr-2"></i>Usuário
+            <label for="username" class="block text-lg font-medium text-gray-700 mb-2">
+              </i>Usuário:
             </label>
+            <div class="input-wrapper">
+            <i class="fas fa-user mr-2 input-icon"></i>
             <input type="text" id="username" name="username" required
-                   class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors"
+                   class="w-full px-8 py-3 rounded-lg transition-colors pr-10 border-none outline-none input-login"
                    placeholder="Digite seu usuário">
+            </div>
           </div>
 
           <div>
-            <label for="password" class="block text-sm font-medium text-gray-700 mb-2">
-              <i class="fas fa-lock mr-2"></i>Senha
+            <label for="password" class="block text-lg font-medium text-gray-700 mb-2">
+              Senha:
             </label>
             <div class="relative">
-              <input type="password" id="password" name="password" required
-                     class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors pr-12"
-                     placeholder="Digite sua senha">
-              <button type="button" onclick="togglePassword()" 
-                      class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700">
-                <i id="password-icon" class="fas fa-eye"></i>
-              </button>
+              <div class="input-wrapper">
+                <i class="fas fa-lock mr-2 input-icon"></i>
+                <input type="password" id="password" name="password" required
+                      class="w-full px-8 py-3 rounded-lg transition-colors pr-10 border-none outline-none input-login"
+                      placeholder="Digite sua senha">
+                      <button type="button" onclick="togglePassword()" 
+                              class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700 button-eye">
+                        <i id="password-icon" class="fas fa-eye"></i>
+                      </button>
+              </div>
             </div>
           </div>
 
@@ -175,9 +338,10 @@
           </div>
 
           <button type="submit" 
-                  class="w-full bg-gradient-to-r from-red-600 to-red-700 text-white py-3 px-4 rounded-lg font-semibold hover:from-red-700 hover:to-red-800 transition-all duration-300 flex items-center justify-center">
-            <i class="fas fa-sign-in-alt mr-2"></i>
+                  class="w-fulltext-white py-3 px-4 rounded-lg font-semibold transition-all duration-300 flex items-center justify-center button-submit">
             Entrar
+            <i class="fas fa-sign-in-alt ml-2 mt-1"></i>
+
           </button>
         </div>
       </form>
@@ -198,35 +362,40 @@
     <!-- Logo e Header -->
     <div class="p-6 border-b border-neutral-200">
       <div class="logo-container text-center mb-4">
-        <img src="documentsv2/logo_horizontal_color.png" alt="Casa de Saúde Menino Jesus de Praga" class="max-h-16 w-auto mx-auto drop-shadow-lg">
       </div>
-      <h1 class="text-xl font-bold text-neutral-800 text-center">Sistema de Processamento</h1>
-      <p class="text-sm text-neutral-600 text-center mt-1">Documentos PDF</p>
+      <h1 class="text-xl font-bold text-neutral-800 text-center">
+        <div class="flex items-center justify-center gap-3">
+          <div class="bg-gradient-to-br from-green-600 to-green-400 w-10 h-10 rounded-full flex items-center justify-center"><i class="fas fa-file-alt text-lg text-white"></i></div>
+          <span><span class="text-green-500">System</span>doc</span>
+        </div>
+      </h1> 
+       
+      <p class="text-sm text-neutral-600 text-center mt-1">Processamento de documentos PDF</p>
     </div>
     
     <!-- Menu de Navegação -->
     <nav class="p-4">
       <ul class="space-y-2">
         <li>
-          <button onclick="showPage('home')" class="menu-item w-full text-left p-4 rounded-lg text-neutral-700 hover:text-white flex items-center gap-3 active" id="menu-home">
+          <button onclick="showPage('home')" class="menu-item w-full text-left p-4 rounded-lg text-green-700 hover:text-white flex items-center gap-3 active" id="menu-home">
             <i class="fa-solid fa-home text-lg"></i>
             <span class="font-medium">Início</span>
           </button>
         </li>
         <li>
-          <button onclick="showPage('recibos')" class="menu-item w-full text-left p-4 rounded-lg text-neutral-700 hover:text-white flex items-center gap-3" id="menu-recibos">
+          <button onclick="showPage('recibos')" class="menu-item w-full text-left p-4 rounded-lg text-green-900 hover:text-white flex items-center gap-3" id="menu-recibos">
             <i class="fa-solid fa-receipt text-lg"></i>
-            <span class="font-medium">Dividir Recibos</span>
+            <span class="font-medium ">Dividir Recibos</span>
           </button>
         </li>
         <li>
-          <button onclick="showPage('contracheques')" class="menu-item w-full text-left p-4 rounded-lg text-neutral-700 hover:text-white flex items-center gap-3" id="menu-contracheques">
+          <button onclick="showPage('contracheques')" class="menu-item w-full text-left p-4 rounded-lg text-green-900 hover:text-white flex items-center gap-3" id="menu-contracheques">
             <i class="fa-solid fa-file-invoice-dollar text-lg"></i>
             <span class="font-medium">Dividir Contracheques</span>
           </button>
         </li>
         <li>
-          <button onclick="showPage('juncao')" class="menu-item w-full text-left p-4 rounded-lg text-neutral-700 hover:text-white flex items-center gap-3" id="menu-juncao">
+          <button onclick="showPage('juncao')" class="menu-item w-full text-left p-4 rounded-lg text-green-900 hover:text-white flex items-center gap-3" id="menu-juncao">
             <i class="fa-solid fa-link text-lg"></i>
             <span class="font-medium">Junção de Documentos</span>
           </button>
@@ -236,13 +405,12 @@
     
     <!-- Informações do Sistema -->
     <div class="absolute bottom-0 left-0 right-0 p-4 border-t border-neutral-200 bg-neutral-50">
-      <button onclick="logout()" class="w-full mb-3 bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition-colors flex items-center justify-center gap-2">
+      <button onclick="logout()" class="w-full mb-3 bg-green-800 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors flex items-center justify-center gap-2">
         <i class="fas fa-sign-out-alt"></i>
         <span class="font-medium">Sair</span>
       </button>
       <div class="text-center">
         <p class="text-xs text-neutral-500">Sistema v2.0</p>
-        <p class="text-xs text-neutral-500">Casa de Saúde Menino Jesus</p>
       </div>
     </div>
   </div>
@@ -260,14 +428,14 @@
         <!-- Header da Página -->
         <div class="welcome-card rounded-2xl shadow-xl p-8 mb-8">
           <div class="text-center">
-            <h1 class="text-4xl font-bold bg-gradient-to-r from-red-800 to-neutral-600 bg-clip-text text-transparent mb-4">
-              Bem-vindo ao Sistema de Processamento
+            <h1 class="text-4xl font-bold mb-4 text-neutral-600">
+              Bem-vindo ao <span class="text-green-500">System</span>doc
             </h1>
             <p class="text-xl text-neutral-600 mb-6">
               Ferramenta completa para divisão de documentos PDF
             </p>
             <div class="flex justify-center">
-              <div class="bg-gradient-to-r from-red-800 to-neutral-600 h-1 w-32 rounded-full"></div>
+              <div class="bg-green-800 h-1 w-32 rounded-full"></div>
             </div>
           </div>
         </div>
@@ -285,7 +453,7 @@
                 Processe e divida recibos de PDF em documentos individuais com extração automática de nomes via OCR.
               </p>
               <div class="flex justify-center">
-                <button class="bg-gradient-to-r from-blue-500 to-blue-600 text-white px-6 py-3 rounded-lg font-medium hover:from-blue-600 hover:to-blue-700 transition-all duration-300 flex items-center gap-2">
+                <button class="bg-gradient-to-r from-blue-500 to-blue-600 text-white px-6 py-3 rounded-lg font-medium hover:from-blue-600 hover:to-blue-700 transition-all duration-300 flex items-center gap-2 button-receeve">
                   <i class="fa-solid fa-arrow-right"></i>
                   Acessar Ferramenta
                 </button>
@@ -412,7 +580,7 @@
       
       // Credenciais válidas
        const validCredentials = {
-         'csmjp.documents': 'csmjp@doc2025'
+         'supervisor': 'supervisor'
        };
       
       // Verificar credenciais

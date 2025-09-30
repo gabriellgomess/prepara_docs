@@ -6,7 +6,7 @@
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
   <meta http-equiv="Pragma" content="no-cache">
   <meta http-equiv="Expires" content="0">
-  <title>Dividir Recibos do PDF - Casa de Saúde Menino Jesus de Praga</title>
+  <title>Dividir Recibos do PDF</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <style>
@@ -54,7 +54,7 @@
       position: absolute;
       width: 100%;
       height: 3px;
-      background: linear-gradient(90deg, #991b1b 0%, #7f1d1d 100%);
+      background: linear-gradient(135deg, #043f0e 0%, #6ab170 100%);
       left: 0;
       cursor: pointer;
       border-radius: 2px;
@@ -64,24 +64,24 @@
     
     .cut-line:hover {
       height: 5px;
-      background: linear-gradient(90deg, #dc2626 0%, #991b1b 100%);
-      box-shadow: 0 2px 8px rgba(153, 27, 27, 0.4);
+      background: linear-gradient(135deg, #348942 0%, #0c5e13 100%);
+      box-shadow: 0 4px 8px rgba(33, 226, 26, 0.295);
     }
     
     .cut-line.end {
-      background: linear-gradient(90deg, #525252 0%, #404040 100%);
+      background: linear-gradient(135deg, #043f0e 0%, #6ab170 100%);
     }
     
     .cut-line.end:hover {
-      background: linear-gradient(90deg, #737373 0%, #525252 100%);
-      box-shadow: 0 2px 8px rgba(82, 82, 82, 0.4);
+      background: linear-gradient(135deg, #043f0e 0%, #6ab170 100%);
+      box-shadow: 0 4px 8px rgba(33, 226, 26, 0.295);
     }
     
     .cut-label {
       position: absolute;
       font-size: 11px;
       font-weight: 600;
-      background: linear-gradient(135deg, #525252 0%, #404040 100%);
+      background: linear-gradient(135deg, #043f0e 0%, #6ab170 100%);
       color: white;
       padding: 4px 8px;
       border-radius: 6px;
@@ -92,7 +92,8 @@
     
     .cut-label:hover {
       transform: scale(1.05);
-      box-shadow: 0 4px 8px rgba(82, 82, 82, 0.4);
+      background: linear-gradient(135deg, #043f0e 0%, #6ab170 100%);
+      box-shadow: 0 4px 8px rgba(33, 226, 26, 0.295);
     }
     
     .cut-label.start {
@@ -109,14 +110,14 @@
       position: absolute;
       left: 0;
       right: 0;
-      border: 2px dashed #991b1b;
+      border: 2px dashed rgba(33, 226, 26, 0.295);
       border-radius: 4px;
       transition: all 0.3s ease;
       animation: fadeIn 0.5s ease-out;
     }
     
     .cut-area:hover {
-      border-color: #dc2626;
+      border-color: rgba(94, 231, 90, 0.295);
     }
     
     .cut-area-label {
@@ -132,7 +133,7 @@
       box-shadow: 0 2px 8px rgba(153, 27, 27, 0.15);
       border: 1px solid rgba(153, 27, 27, 0.3);
       transition: all 0.3s ease;
-      color: #991b1b;
+      color: #22bc6f;
     }
     
     .cut-area-label:hover {
@@ -168,52 +169,93 @@
     }
     
     .btn-primary {
-      background: linear-gradient(135deg, #991b1b 0%, #7f1d1d 100%);
+      background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+      color: white;
+      border: none;
       transition: all 0.3s ease;
+      box-shadow: 0 4px 6px rgba(59, 130, 246, 0.25);
     }
     
     .btn-primary:hover {
-      background: linear-gradient(135deg, #dc2626 0%, #991b1b 100%);
-      transform: translateY(-1px);
-      box-shadow: 0 4px 12px rgba(153, 27, 27, 0.4);
+      background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 15px rgba(59, 130, 246, 0.4);
     }
     
     .btn-secondary {
-      background: linear-gradient(135deg, #525252 0%, #404040 100%);
+      background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+      color: white;
+      border: none;
       transition: all 0.3s ease;
+      box-shadow: 0 4px 6px rgba(139, 92, 246, 0.25);
     }
     
     .btn-secondary:hover {
-      background: linear-gradient(135deg, #737373 0%, #525252 100%);
-      transform: translateY(-1px);
-      box-shadow: 0 4px 12px rgba(82, 82, 82, 0.4);
+      background: linear-gradient(135deg, #7c3aed 0%, #6d28d9 100%);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 15px rgba(139, 92, 246, 0.4);
     }
     
     .btn-success {
-      background: linear-gradient(135deg, #525252 0%, #404040 100%);
+      background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+      color: white;
+      border: none;
       transition: all 0.3s ease;
+      box-shadow: 0 4px 6px rgba(16, 185, 129, 0.25);
     }
     
     .btn-success:hover {
-      background: linear-gradient(135deg, #737373 0%, #525252 100%);
-      transform: translateY(-1px);
-      box-shadow: 0 4px 12px rgba(82, 82, 82, 0.4);
+      background: linear-gradient(135deg, #059669 0%, #047857 100%);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 15px rgba(16, 185, 129, 0.4);
     }
     
     .file-input {
       transition: all 0.3s ease;
-      border-color: #d4d4d8;
+      border-color: #d1d5db;
+      position: relative;
+      cursor: pointer;
+      font-family: 'Inter', sans-serif;
+      font-weight: 500;
+      animation: slideIn 0.5s ease-out;
     }
     
     .file-input:hover {
-      transform: translateY(-1px);
-      box-shadow: 0 4px 12px rgba(82, 82, 82, 0.1);
-      border-color: #991b1b;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(34, 197, 94, 0.15);
+      border-color: #22c55e;
+      background-color: #f0fdf4;
     }
     
     .file-input:focus {
-      border-color: #991b1b;
-      box-shadow: 0 0 0 3px rgba(153, 27, 27, 0.1);
+      border-color: #16a34a;
+      box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.1);
+      background-color: #f0fdf4;
+    }
+    
+    .file-input::file-selector-button {
+      background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 14px;
+      cursor: pointer;
+      margin-right: 16px;
+      transition: all 0.3s ease;
+      box-shadow: 0 2px 4px rgba(34, 197, 94, 0.2);
+    }
+    
+    .file-input::file-selector-button:hover {
+      background: linear-gradient(135deg, #16a34a 0%, #15803d 100%);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 8px rgba(34, 197, 94, 0.3);
+    }
+    
+    .file-input::file-selector-button:active {
+      transform: translateY(0);
+      box-shadow: 0 2px 4px rgba(34, 197, 94, 0.2);
     }
     
     .preview-container {
@@ -268,7 +310,7 @@
   <!-- Título da Página -->
   <div class="bg-white border-b border-neutral-200 shadow-sm">
     <div class="container mx-auto px-4 py-6">
-      <h1 class="text-3xl font-bold bg-gradient-to-r from-red-800 to-neutral-600 bg-clip-text text-transparent text-center">
+      <h1 class="text-3xl font-bold text-green-700 bg-clip-text text-center">
         Dividir Recibos do PDF
       </h1>
     </div>
@@ -281,16 +323,16 @@
         <!-- Formulário - 2/3 do espaço -->
         <div class="lg:col-span-2 bg-white rounded-2xl shadow-xl p-8 border border-neutral-200">
           <div class="mb-6">
-            <label class="block text-sm font-semibold text-neutral-700 mb-3">
-              <i class="fa-solid fa-file-pdf mr-2 text-red-800"></i>Selecionar PDF
+            <label class="block text-xl font-semibold text-green-700 mb-3">
+              <i class="fa-solid fa-file-pdf mr-2 text-green-700"></i>Selecionar PDF
             </label>
             <input type="file" id="pdfInput" accept="application/pdf" 
-                   class="file-input w-full p-4 border-2 border-dashed border-neutral-300 rounded-xl bg-neutral-50 hover:bg-neutral-100 focus:border-red-800 focus:outline-none transition-all duration-300" />
+                   class="file-input w-full p-4 border-2 border-dashed border-green-300 rounded-xl bg-green-50 hover:bg-green-100 focus:border-green-800 focus:outline-none transition-all duration-300" />
           </div>
 
           <div class="mb-6">
-            <h3 class="text-xl font-bold text-neutral-800 mb-4 flex items-center gap-2">
-              <i class="fa-solid fa-scissors text-red-800"></i>
+            <h3 class="text-xl font-bold text-green-700 mb-4 flex items-center gap-2">
+              <i class="fa-solid fa-scissors text-green-700"></i>
               Pontos de Corte (do Topo para Base)
             </h3>
 
@@ -305,11 +347,11 @@
           </div>
 
           <div class="flex space-x-3">
-            <button id="processBtn" class="btn-primary text-white px-6 py-3 rounded-lg font-medium flex-1 flex items-center gap-2">
-              <i class="fa-solid fa-rocket"></i>
+            <button disabled id="processBtn" class="btn-primary text-white px-6 py-3 rounded-lg font-medium flex-1 flex items-center gap-2 disabled:cursor-not-allowed">
+              <i class="fa-solid fa-arrows-left-right"></i>
               Dividir Recibos
             </button>
-            <button id="previewBtn" class="btn-secondary text-white px-6 py-3 rounded-lg font-medium flex items-center gap-2">
+            <button disabled id="previewBtn" class="btn-secondary text-white px-6 py-3 rounded-lg font-medium flex items-center gap-2 disabled:cursor-not-allowed">
               <i class="fa-solid fa-ruler-combined"></i>
               Dimensões
             </button>
@@ -330,8 +372,8 @@
         <!-- Preview A4 - 1/3 do espaço -->
         <div class="preview-container">
           <div class="bg-white rounded-2xl shadow-xl p-8 border border-neutral-200">
-            <h3 class="text-xl font-bold text-neutral-800 mb-6 text-center flex items-center justify-center gap-2">
-              <i class="fa-solid fa-file-lines text-red-800"></i>
+            <h3 class="text-xl font-bold text-green-700 mb-6 text-center flex items-center justify-center gap-2">
+              <i class="fa-solid fa-file-lines text-green-700"></i>
               Visualização
             </h3>
 

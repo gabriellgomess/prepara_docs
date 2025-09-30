@@ -8,12 +8,88 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <style>
+        @keyframes slideIn {
+            from { transform: translateX(20px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .container-how{
+            animation: slideIn 0.5s ease-out;
+        }
+
+        .file-input {
+            transition: all 0.3s ease;
+            border-color: #d1d5db;
+            position: relative;
+            cursor: pointer;
+            font-family: 'Inter', sans-serif;
+            font-weight: 500;
+            animation: fadeIn 0.5s ease-out;
+        }
+        
+        .file-input:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(34, 197, 94, 0.15);
+            border-color: #22c55e;
+            background-color: #f0fdf4;
+        }
+        
+        .file-input:focus {
+            border-color: #16a34a;
+            box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.1);
+            background-color: #f0fdf4;
+        }
+        
+        .file-input::file-selector-button {
+            background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            margin-right: 16px;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 4px rgba(34, 197, 94, 0.2);
+        }
+
+        .file-input::file-selector-button:hover {
+            background: linear-gradient(135deg, #16a34a 0%, #15803d 100%);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(34, 197, 94, 0.3);
+        }
+        
+        .file-input::file-selector-button:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 4px rgba(34, 197, 94, 0.2);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+            color: white;
+            border: none;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(59, 130, 246, 0.25);
+            }
+            
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 15px rgba(59, 130, 246, 0.4);
+        }
+    </style>
 </head>
 <body class="bg-gradient-to-br from-purple-50 to-indigo-100 min-h-screen">
     <!-- Título da Página -->
      <div class="bg-white border-b border-neutral-200 shadow-sm">
     <div class="container mx-auto px-4 py-6">
-      <h1 class="text-3xl font-bold bg-gradient-to-r from-red-800 to-neutral-600 bg-clip-text text-transparent text-center">
+      <h1 class="text-3xl font-bold text-green-700 text-center">
         Junção de Documentos
       </h1>
     </div>
@@ -21,7 +97,7 @@
 
     <div class="container mx-auto px-4 py-8">
         <!-- Instruções -->
-        <div class="bg-blue-50 border-l-4 border-blue-400 p-4 mb-8 rounded-r-lg">
+        <div class="container-how bg-blue-50 border-l-4 border-blue-400 p-4 mb-8 rounded-r-lg">
             <div class="flex">
                 <div class="flex-shrink-0">
                     <i class="fas fa-info-circle text-blue-400 text-xl"></i>
@@ -44,15 +120,15 @@
         <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
             <!-- Upload Recibos -->
             <div class="bg-white rounded-lg shadow-lg p-6">
-                <h3 class="text-xl font-semibold text-gray-800 mb-4 flex items-center">
+                <h3 class="text-xl font-semibold text-green-800 mb-4 flex items-center">
                     <i class="fas fa-receipt text-blue-500 mr-3"></i>
                     Arquivos de Recibos
                 </h3>
-                <div class="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-blue-400 transition-colors">
+                <div class="file-input border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-blue-400 transition-colors">
                     <input type="file" id="recibos-input" accept=".zip" class="hidden" onchange="handleRecibosUpload(event)">
                     <label for="recibos-input" class="cursor-pointer">
-                        <i class="fas fa-cloud-upload-alt text-4xl text-gray-400 mb-4 block"></i>
-                        <p class="text-gray-600">Clique para selecionar o arquivo ZIP dos recibos</p>
+                        <i class="fas fa-cloud-upload-alt text-4xl text-green-400 mb-4 block"></i>
+                        <p class="text-gray-600">Clique para selecionar o arquivo ZIP dos recibos dos funcionários</p>
                         <p class="text-sm text-gray-500 mt-2">Arquivo gerado pela extração de recibos</p>
                     </label>
                 </div>
@@ -69,15 +145,15 @@
 
             <!-- Upload Contracheques -->
             <div class="bg-white rounded-lg shadow-lg p-6">
-                <h3 class="text-xl font-semibold text-gray-800 mb-4 flex items-center">
+                <h3 class="text-xl font-semibold text-green-800 mb-4 flex items-center">
                     <i class="fas fa-file-invoice-dollar text-green-500 mr-3"></i>
                     Arquivos de Contracheques
                 </h3>
-                <div class="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-green-400 transition-colors">
+                <div class="file-input border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-green-400 transition-colors ">
                     <input type="file" id="contracheques-input" accept=".zip" class="hidden" onchange="handleContrachequesUpload(event)">
                     <label for="contracheques-input" class="cursor-pointer">
-                        <i class="fas fa-cloud-upload-alt text-4xl text-gray-400 mb-4 block"></i>
-                        <p class="text-gray-600">Clique para selecionar o arquivo ZIP dos contracheques</p>
+                        <i class="fas fa-cloud-upload-alt text-4xl text-green-400 mb-4 block"></i>
+                        <p class="text-gray-600">Clique para selecionar o arquivo ZIP dos contracheques dos funcionários</p>
                         <p class="text-sm text-gray-500 mt-2">Arquivo gerado pela extração de contracheques</p>
                     </label>
                 </div>
@@ -96,7 +172,7 @@
         <!-- Botão de Processamento -->
         <div class="text-center mb-8">
             <button id="process-btn" onclick="processDocuments()" disabled 
-                    class="bg-purple-600 text-white px-8 py-3 rounded-lg font-semibold text-lg disabled:bg-gray-400 disabled:cursor-not-allowed hover:bg-purple-700 transition-colors">
+                    class="btn-primary bg-purple-600 text-white px-8 py-3 rounded-lg font-semibold text-lg disabled:bg-gray-400 disabled:cursor-not-allowed hover:bg-purple-700 transition-colors">
                 <i class="fas fa-magic mr-2"></i>
                 Processar e Combinar Documentos
             </button>

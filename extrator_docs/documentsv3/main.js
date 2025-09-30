@@ -514,6 +514,20 @@ function initializeDefaultCuts() {
   }, 500);
 }
 
+// Verifica se o input file está vazio ou não para liberar o botão
+document.getElementById('pdfInput').addEventListener("change", (e) => {
+  const buttonDisabled1 = document.getElementById("processBtn");
+  const buttonDisabled2 = document.getElementById("previewBtn");
+  const fileInput = document.getElementById('pdfInput');
+
+  if(fileInput.files.length > 0){
+    buttonDisabled1.disabled = false;
+    buttonDisabled2.disabled = false;
+  }else {
+    buttonDisabled1.disabled = true;
+    buttonDisabled2.disabled = true;
+  }
+})
 // Adiciona novo campo de corte dinamicamente com animação
 document.getElementById('addCutBtn').addEventListener('click', () => {
   cutCount++;
@@ -704,7 +718,7 @@ document.getElementById('processBtn').addEventListener('click', async () => {
             
             const displayName = employeeName.replace(/_/g, ' ');
             link.innerHTML = `<i class="fa-solid fa-user"></i> ${displayName}`;
-            link.className = 'inline-block bg-gradient-to-r from-red-800 to-red-700 text-white hover:from-red-700 hover:to-red-600 border border-red-800 rounded-full px-3 py-1.5 font-medium text-xs transition-all duration-200 hover:scale-105 shadow-sm hover:shadow-md cursor-pointer animate-pulse';
+            link.className = 'inline-block bg-gradient-to-r from-green-800 to-green-700 text-white hover:from-green-700 hover:to-green-600 border border-green-800 rounded-full px-3 py-1.5 font-medium text-xs transition-all duration-200 hover:scale-105 shadow-sm hover:shadow-md cursor-pointer animate-pulse';
             
             // Adicionar animação de entrada
             link.style.opacity = '0';

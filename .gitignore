@@ -1,0 +1,13 @@
+# Ambientes virtuais
+venv/
+.venv/
+
+# Arquivos de configuração locais
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# VSCode/PyCharm configs
+.vscode/
+.idea/

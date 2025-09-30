@@ -721,7 +721,11 @@ def excluir_pdfs():
                 log_and_emit(f"Arquivo excluído: {filename}")
             except Exception as e:
                 log_and_emit(f"Erro ao excluir {filename}: {str(e)}", level="error")
-        
+        if(deleted_count == 0):
+            return jsonify({
+                'status': 'error',
+                'message': 'Nenhum arquivo foi excluído'
+            })
         return jsonify({
             'status': 'success',
             'message': f'{deleted_count} arquivo(s) excluído(s) com sucesso'
